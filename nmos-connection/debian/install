@@ -1,0 +1,7 @@
+bin/connectionmanagement usr/bin
+share/ipp-connectionmanagement usr/share
+etc/apache2/sites-available/*.conf /etc/apache2/sites-available/
+etc/init/nmosconnection.conf /etc/init
+lib/systemd/system/nmosconnection.service /lib/systemd/system
+var/www/connectionManagementDriver /var/www
+var/www/connectionManagementUI /var/www

@@ -1,0 +1,6 @@
+[Unit]
+Description=proxylisting
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/proxylisting

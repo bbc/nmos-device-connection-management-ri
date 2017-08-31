@@ -1,0 +1,576 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Connection Management Client</title>
+    <meta name="description" content="NMOS Connection Management User Interface">
+    <meta name="author" content="BBC RD">
+
+    <link rel="stylesheet" href="css/default.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/default.js"></script>
+
+    <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <![endif]-->
+  </head>
+
+  <body>
+    <div class='container-fluid'>
+      <h1>NMOS Connection Management</h1>
+      <script src="js/default.js"></script>
+      <form class="form-inline">
+        <label class="sr-only" for="api-root">API Root</label>
+        <input type="text" class="form-control mb-3 mr-sm-3 mb-sm-0" id="api-root" placeholder="http://localhost:8080">
+        <input type="button" class="btn btn-danger" value="Change API Root" id='api-root-button'>
+      </form>
+      <div class='col-md-6'>
+        <h2>Senders</h2>
+        <div>
+          <ul id='senders-list' class='list-unstyled'></ul>
+        </div>
+        <div id="sender-accordion" role="tablist" aria-multiselectable="true" style="display:none;">
+          <div class="card">
+            <div class="card-header" role="tab" id="headingTwo">
+              <h5 class="mb-0">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  <h3>Staged Transport Parameters</h3>
+                </a>
+              </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+              <div class="card-block">
+                <div id='senders-details'>
+                  <form class="form-horizontal" id="senders-form">
+                    <div class="form-group" id="sender-receiver_id-group">
+                      <label for="sender-receiver_id" class="col-sm-2 control-label">Receiver UUID</label>
+                      <div class="col-sm-5">
+                        <input type="text" class="form-control" id="sender-receiver_id">
+                      </div>                      
+                    </div>
+                    <div class="form-group" id="sender-legs-group">
+                      <label for="sender-legs" class="col-sm-2 control-label">Leg</label>
+                      <div class="col-sm-2">
+                        <select id="sender-legs" class="form-control">
+                          <option>1</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-source_ip-group">
+                      <label for="sender-source_ip" class='col-sm-2 control-label'>Source IP</label>
+                      <div class='col-sm-5'>
+                        <select id="sender-source_ip" class="form-control">
+                          <option>auto</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-destination_ip-group">
+                      <label for="sender-destination_ip" class='col-sm-2 control-label'>Destination IP</label>
+                      <div class='col-sm-5'>
+                        <input type="text" class="form-control" id="sender-destination_ip">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-source_port-group">
+                      <label for="sender-source_port" class='col-sm-2 control-label'>Source Port</label>
+                      <div class='col-sm-2'>
+                        <input type="text" class="form-control" id="sender-source_port">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-destination_port-group">
+                      <label for="sender-destination_port" class='col-sm-2 control-label'>Destination Port</label>
+                      <div class='col-sm-2'>
+                        <input type="number" class="form-control" id="sender-destination_port">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-rtp_enabled-group">
+                      <label for="sender-rtp_enabled" class='col-sm-2 control-label'>RTP Enabled</label>
+                      <div class='col-sm-1'>
+                        <input type="checkbox" class="form-control" id="sender-rtp_enabled">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec_enabled-group">
+                      <label for="sender-fec_enabled" class='col-sm-2 control-label'>FEC Enabled</label>
+                      <div class='col-sm-1'>
+                        <input type="checkbox" class="form-control" id="sender-fec_enabled">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec_destination_ip-group">
+                      <label for="sender-fec_destination_ip" class='col-sm-2 control-label'>FEC Destination IP</label>
+                      <div class='col-sm-5'>
+                        <input type="text" class="form-control" id="sender-fec_destination_ip">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec_type-group">
+                      <label for="sender-fec_type" class='col-sm-2 control-label'>FEC Type</label>
+                      <div class='col-sm-3'>
+                        <select class="form-control" id="sender-fec_type">
+                          <option>XOR</option>
+                          <option>Reed-Solomon</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec_mode-group">
+                      <label for="sender-fec_mode" class='col-sm-2 control-label'>FEC Mode</label>
+                      <div class='col-sm-3'>
+                        <select class="form-control" id="sender-fec_mode">
+                          <option>1D</option>
+                          <option>2D</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec_block_width-group">
+                      <label for="sender-fec_block_width" class='col-sm-2 control-label'>FEC Block Width</label>
+                      <div class='col-sm-5'>
+                        <input type="text" class="form-control" id="sender-fec_block_width">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec_block_height-group">
+                      <label for="sender-fec_block_height" class='col-sm-2 control-label'>FEC Block Height</label>
+                      <div class='col-sm-5'>
+                        <input type="text" class="form-control" id="sender-fec_block_height">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec1D_destination_port-group">
+                      <label for="sender-fec1D_destination_port" class='col-sm-2 control-label'>FEC 1D Destination Port</label>
+                      <div class='col-sm-2'>
+                        <input type="text" class="form-control" id="sender-fec1D_destination_port">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec1D_source_port-group">
+                      <label for="sender-fec1D_source_port" class='col-sm-2 control-label'>FEC 1D Source Port</label>
+                      <div class='col-sm-2'>
+                        <input type="text" class="form-control" id="sender-fec1D_source_port">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec2D_destination_port-group">
+                      <label for="sender-fec2D_destination_port" class='col-sm-2 control-label'>FEC 2D Destination Port</label>
+                      <div class='col-sm-2'>
+                        <input type="text" class="form-control" id="sender-fec2D_destination_port">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-fec2D_source_port-group">
+                      <label for="sender-fec2D_source_port" class='col-sm-2 control-label'>FEC 2D Source Port</label>
+                      <div class='col-sm-2'>
+                        <input type="text" class="form-control" id="sender-fec2D_source_port">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-rtcp_destination_ip-group">
+                      <label for="sender-rtcp_destination_ip" class='col-sm-2 control-label'>RTCP Destination IP</label>
+                      <div class='col-sm-5'>
+                        <input type="text" class="form-control" id="sender-rtcp_destination_ip">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-rtcp_source_port-group">
+                      <label for="sender-rtcp_source_port" class='col-sm-2 control-label'>RTCP Source Port</label>
+                      <div class='col-sm-2'>
+                        <input type="text" class="form-control" id="sender-rtcp_source_port">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-rtcp_destination_port-group">
+                      <label for="sender-rtcp_destination_port" class='col-sm-2 control-label'>RTCP Destination Port</label>
+                      <div class='col-sm-2'>
+                        <input type="text" class="form-control" id="sender-rtcp_destination_port">
+                      </div>
+                    </div>
+                    <div class="form-group" id="sender-rtcp_enabled-group">
+                      <label for="sender-rtcp_enabled" class='col-sm-2 control-label'>RTCP Enabled</label>
+                      <div class='col-sm-1'>
+                        <input type="checkbox" class="form-control" id="sender-rtcp_enabled">
+                      </div>
+                    </div>
+                    <div class='form-group' id="sender-update-group">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <input type="button" class="btn btn-primary" value="Stage Parameters" id='sender-update-button'>
+                      </div>
+                    </div>
+                    <div class="alert alert-success" id="sender-success">
+                      <p>Sender updated successfully</p>
+                    </div>
+                    <div class="alert alert-danger" id="sender-failure" role="alert">
+                      <p id="sender-fail-alert-text"></p>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" role="tab" id="headingThree">
+              <h5 class="mb-0">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  <h3>Activation</h3>
+                </a>
+              </h5>
+            </div>
+            <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+              <div class="card-block">
+                <form class="form-horizontal" id="senders-form">
+                  <div class="form-group" id="sender-rtcp_source_port-group">
+                    <div class="col-sm-10">
+                      <input type="button" class="btn btn-danger" value="Activate Now" id='sender-activate-now'>          
+                    </div>
+                  </div>
+                  <div class="form-group row" id="sender-activate-relative-group">
+                    <div class="col-sm-2">
+                      <input type="button" class="btn btn-warning" value="Activate Relative" id='sender-activate-relative'>          
+                    </div>
+                    <label class="col-form-label col-sm-1" for='sender-activate-relative-secs'>Seconds</label>
+                    <div class="col-sm-2">
+                      <input id='sender-activate-relative-secs' type="number" class="form-control"></input>
+                    </div>
+                    <label class="col-form-label col-sm-2" for='sender-activate-relative-secs'>Nanoseconds</label>           
+                    <div class="col-sm-2">
+                      <input id='sender-activate-relative-nanos' type="number" class="form-control"></input>
+                    </div>
+                  </div>
+                  <div class="form-group row" id="sender-activate-absolute-group">
+                    <div class="col-sm-2">
+                      <input type="button" class="btn btn-warning" value="Activate Absolute" id='sender-activate-absolute'>          
+                    </div>
+                    <label class="col-form-label col-sm-1" for='sender-activate-absolute-secs'>Seconds</label>
+                    <div class="col-sm-2">
+                      <input id='sender-activate-absolute-secs' type="number" class="form-control"></input>
+                    </div>
+                    <label class="col-form-label col-sm-2" for='sender-activate-absolute-nanos'>Nanoseconds</label>           
+                    <div class="col-sm-2">
+                      <input id='sender-activate-absolute-nanos' type="number" class="form-control"></input>
+                    </div>
+                  </div>
+                  <div class="alert alert-success start-hidden" id="sender-activate-success">
+                    <p id='sender-activate-success-text'>Activation successful</p>
+                  </div>
+                  <div class="alert alert-danger start-hidden" id="sender-activate-failure" role="alert">
+                    <p id="sender-activate-failure-text"></p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" role="tab" id="headingFour">
+              <h5 class="mb-0">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                  <h3>Active Transport File</h3>
+                </a>
+              </h5>
+            </div>
+            <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingFour">
+              <div class="card-block">
+                <p>Click <a id="sender-transport-link">here</a> to get current transport file for this sender.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" role="tab" id="headingFive">
+              <h5 class="mb-0">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                  <h3>Active Transport Parameters</h3>
+                </a>
+              </h5>
+            </div>
+            <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingFive">
+              <div class="card-block">
+                <input type="button" class="btn btn-success" value="Refresh" id='sender-active-params-refresh'>
+                <div id='sender-active-params'>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='col-md-6'>
+        <h2>Receivers</h2>
+        <div>
+          <ul id='receivers-list' class='list-unstyled'></ul>
+        </div>
+        <div id='receivers-details'>
+          <div id="receiver-accordion" role="tablist" aria-multiselectable="true" style="display:none;">
+            <div class="card">
+              <div class="card-header" role="tab" id="receiver-headingTwo">
+                <h5 class="mb-0">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#receiver-accordion" href="#receiver-collapseTwo" aria-expanded="false" aria-controls="receiver-collapseTwo">
+                    <h3>Staged Transport Parameters</h3>
+                  </a>
+                </h5>
+              </div>
+              <div id="receiver-collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="card-block">
+                  <div id='receivers-details'>
+                    <form class="form-horizontal" id="receivers-form">
+                      <div class="form-group" id="receiver-sender_id-group">
+                        <label for="receiver-sender_id" class="col-sm-2 control-label">Sender UUID</label>
+                        <div class="col-sm-5">
+                          <input type="text" class="form-control" id="receiver-sender_id">
+                        </div>                      
+                      </div>
+                      <div class="form-group" id="receiver-legs-group">
+                        <label for="receiver-legs" class="col-sm-2 control-label">Leg</label>
+                        <div class="col-sm-2">
+                          <select id="receiver-legs" class="form-control">
+                            <option>1</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-source_ip-group">
+                        <label for="receiver-source_ip" class='col-sm-2 control-label'>Source IP</label>
+                        <div class='col-sm-5'>
+                          <input type="text" class="form-control" id="receiver-source_ip">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-interface_ip-group">
+                        <label for="receiver-interface_ip" class='col-sm-2 control-label'>Interface IP</label>
+                        <div class='col-sm-5'>
+                          <select id="receiver-interface_ip" class="form-control">
+                            <option>auto</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-multicast_ip-group">
+                        <label for="receiver-multicast_ip" class='col-sm-2 control-label'>Multicast Group IP</label>
+                        <div class='col-sm-5'>
+                          <input type="text" class="form-control" id="receiver-multicast_ip">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-source_port-group">
+                        <label for="receiver-source_port" class='col-sm-2 control-label'>Source Port</label>
+                        <div class='col-sm-2'>
+                          <input type="number" class="form-control" id="receiver-source_port">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-destination_port-group">
+                        <label for="receiver-destination_port" class='col-sm-2 control-label'>Destination Port</label>
+                        <div class='col-sm-2'>
+                          <input type="number" class="form-control" id="receiver-destination_port">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-rtp_enabled-group">
+                        <label for="receiver-rtp_enabled" class='col-sm-2 control-label'>RTP Enabled</label>
+                        <div class='col-sm-1'>
+                          <input type="checkbox" class="form-control" id="receiver-rtp_enabled">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec_enabled-group">
+                        <label for="receiver-fec_enabled" class='col-sm-2 control-label'>FEC Enabled</label>
+                        <div class='col-sm-1'>
+                          <input type="checkbox" class="form-control" id="receiver-fec_enabled">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec_destination_ip-group">
+                        <label for="receiver-fec_destination_ip" class='col-sm-2 control-label'>FEC Destination IP</label>
+                        <div class='col-sm-5'>
+                          <input type="text" class="form-control" id="receiver-fec_destination_ip">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec_mode-group">
+                        <label for="receiver-fec_mode" class='col-sm-2 control-label'>FEC Mode</label>
+                        <div class='col-sm-3'>
+                          <select class="form-control" id="receiver-fec_mode">
+                            <option>1D</option>
+                            <option>2D</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec_block_width-group">
+                        <label for="receiver-fec_block_width" class='col-sm-2 control-label'>FEC Block Width</label>
+                        <div class='col-sm-5'>
+                          <input type="text" class="form-control" id="receiver-fec_block_width">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec_block_height-group">
+                        <label for="receiver-fec_block_height" class='col-sm-2 control-label'>FEC Block Height</label>
+                        <div class='col-sm-5'>
+                          <input type="text" class="form-control" id="receiver-fec_block_height">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec1D_destination_port-group">
+                        <label for="receiver-fec1D_destination_port" class='col-sm-2 control-label'>FEC 1D Destination Port</label>
+                        <div class='col-sm-2'>
+                          <input type="text" class="form-control" id="receiver-fec1D_destination_port">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec1D_source_port-group">
+                        <label for="receiver-fec1D_source_port" class='col-sm-2 control-label'>FEC 1D Source Port</label>
+                        <div class='col-sm-2'>
+                          <input type="text" class="form-control" id="receiver-fec1D_source_port">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec2D_destination_port-group">
+                        <label for="receiver-fec2D_destination_port" class='col-sm-2 control-label'>FEC 2D Destination Port</label>
+                        <div class='col-sm-2'>
+                          <input type="text" class="form-control" id="receiver-fec2D_destination_port">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-fec2D_source_port-group">
+                        <label for="receiver-fec2D_source_port" class='col-sm-2 control-label'>FEC 2D Source Port</label>
+                        <div class='col-sm-2'>
+                          <input type="text" class="form-control" id="receiver-fec2D_source_port">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-rtcp_destination_ip-group">
+                        <label for="receiver-rtcp_destination_ip" class='col-sm-2 control-label'>RTCP Destination IP</label>
+                        <div class='col-sm-5'>
+                          <input type="text" class="form-control" id="receiver-rtcp_destination_ip">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-rtcp_source_port-group">
+                        <label for="receiver-rtcp_source_port" class='col-sm-2 control-label'>RTCP Source Port</label>
+                        <div class='col-sm-2'>
+                          <input type="text" class="form-control" id="receiver-rtcp_source_port">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-rtcp_destination_port-group">
+                        <label for="receiver-rtcp_destination_port" class='col-sm-2 control-label'>RTCP Destination Port</label>
+                        <div class='col-sm-2'>
+                          <input type="text" class="form-control" id="receiver-rtcp_destination_port">
+                        </div>
+                      </div>
+                      <div class="form-group" id="receiver-rtcp_enabled-group">
+                        <label for="receiver-rtcp_enabled" class='col-sm-2 control-label'>RTCP Enabled</label>
+                        <div class='col-sm-1'>
+                          <input type="checkbox" class="form-control" id="receiver-rtcp_enabled">
+                        </div>
+                      </div>
+                      <div class='form-group' id="receiver-update-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                          <input type="button" class="btn btn-primary" value="Stage Parameters" id='receiver-update-button'>
+                        </div>
+                      </div>
+                      <div class="alert alert-success" id="receiver-success">
+                        <p>Receiver updated successfully</p>
+                      </div>
+                      <div class="alert alert-danger" id="receiver-failure" role="alert">
+                        <p id="receiver-fail-alert-text"></p>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" role="tab" id="receiver-headingFour">
+                <h5 class="mb-0">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#receiver-accordion" href="#receiver-collapseFour" aria-expanded="false" aria-controls="receiver-collapseFour">
+                    <h3>Staged Transport File</h3>
+                  </a>
+                </h5>
+              </div>
+              <div id="receiver-collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingFour">
+                <div class="card-block">
+                  <form class="form-horizontal" id="receivers-tf-form">
+                    <div class="form-group" id="receiver-tf-type-group">
+                      <label for="receiver-tf-type" class="col-sm-2 control-label">Transport File Type</label>
+                      <div class="col-sm-5">
+                        <input type="text" class="form-control" id="receiver-tf-type">
+                      </div>                      
+                    </div>
+                    <div class="form-group" id="receiver-tf-data-group">
+                      <label for="receiver-tf-data" class="col-sm-2 control-label">Data</label>
+                      <div class="col-sm-5">
+                        <textarea rows="20" cols="50" type="text" class="form-control" id="receiver-tf-data">
+                        </textarea>
+                      </div>                      
+                    </div>
+                    <div class="form-group" id="receiver-tf-senderid-group">
+                      <label for="receiver-tf-data" class="col-sm-2 control-label">Sender ID</label>
+                      <div class="col-sm-5">
+                        <input type="text" class="form-control" id="receiver-tf-senderid">
+                      </div>                      
+                    </div>
+                    <div class='form-group' id="receiver-update-tf">
+                      <div class="col-sm-offset-2 col-sm-10">
+                        <input type="button" class="btn btn-primary" value="Stage File" id='receiver-update-tf'>
+                      </div>
+                    </div>
+                    <div class="alert alert-success start-hidden" id="receiver-tf-success">
+                      <p>Receiver transport file updated successfully</p>
+                    </div>
+                    <div class="alert alert-danger start-hidden" id="receiver-tf-failure" role="alert">
+                      <p id="receiver-tf-fail-alert-text"></p>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" role="tab" id="receiver-headingThree">
+                <h5 class="mb-0">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#receiver-accordion" href="#receiver-collapseThree" aria-expanded="false" aria-controls="receiver-collapseThree">
+                    <h3>Activation</h3>
+                  </a>
+                </h5>
+              </div>
+              <div id="receiver-collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                <div class="card-block">
+                  <form class="form-horizontal" id="receivers-form">
+                    <div class="form-group" id="receiver-rtcp_source_port-group">
+                      <div class="col-sm-10">
+                        <input type="button" class="btn btn-danger" value="Activate Now" id='receiver-activate-now'>          
+                      </div>
+                    </div>
+                    <div class="form-group row" id="receiver-activate-relative-group">
+                      <div class="col-sm-2">
+                        <input type="button" class="btn btn-warning" value="Activate Relative" id='receiver-activate-relative'>          
+                      </div>
+                      <label class="col-form-label col-sm-1" for='receiver-activate-relative-secs'>Seconds</label>
+                      <div class="col-sm-2">
+                        <input id='receiver-activate-relative-secs' type="number" class="form-control"></input>
+                      </div>
+                      <label class="col-form-label col-sm-2" for='receiver-activate-relative-nanos'>Nanoseconds</label>           
+                      <div class="col-sm-2">
+                        <input id='receiver-activate-relative-nanos' type="number" class="form-control"></input>
+                      </div>
+                    </div>
+                    <div class="form-group row" id="receiver-activate-absolute-group">
+                      <div class="col-sm-2">
+                        <input type="button" class="btn btn-warning" value="Activate Absolute" id='receiver-activate-absolute'>          
+                      </div>
+                      <label class="col-form-label col-sm-1" for='receiver-activate-absolute-secs'>Seconds</label>
+                      <div class="col-sm-2">
+                        <input id='receiver-activate-absolute-secs' type="number" class="form-control"></input>
+                      </div>
+                      <label class="col-form-label col-sm-2" for='receiver-activate-absolute-nanos'>Nanoseconds</label>           
+                      <div class="col-sm-2">
+                        <input id='receiver-activate-absolute-nanos' type="number" class="form-control"></input>
+                      </div>
+                    </div>
+                    <div class="alert alert-success start-hidden" id="receiver-activate-success">
+                      <p id='receiver-activate-success-text'>Activation successful</p>
+                    </div>
+                    <div class="alert alert-danger start-hidden" id="receiver-activate-failure" role="alert">
+                      <p id="receiver-activate-failure-text"></p>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header" role="tab" id="receiver-headingFive">
+                <h5 class="mb-0">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#receiver-accordion" href="#receiver-collapseFive" aria-expanded="false" aria-controls="receiver-collapseFive">
+                    <h3>Active Transport Parameters</h3>
+                  </a>
+                </h5>
+              </div>
+              <div id="receiver-collapseFive" class="collapse" role="tabpanel" aria-labelledby="receiver-headingFive">
+                <div class="card-block">
+                  <input type="button" class="btn btn-success" value="Refresh" id='receiver-active-params-refresh'>
+                  <div id='receiver-active-params'>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function(){
+      doInit();
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,2 @@
+/lib/init/upstart-job /etc/init.d/nmosconnection
+/lib/systemd/system/nmosconnection.service /etc/systemd/system/multi-user.target.wants/nmosconnection.service

@@ -1,0 +1,6 @@
+[Unit]
+Description=nmosconnectionmanagement
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/connectionmanagement

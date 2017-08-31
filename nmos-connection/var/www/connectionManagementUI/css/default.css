@@ -1,0 +1,19 @@
+#sender-success{
+    display: none;
+}
+
+#sender-failure{
+    display: none;
+}
+
+.start-hidden{
+    display: none;
+}
+
+.col-form-label{
+    margin-top: 5px;
+}
+
+.strong{
+    font-weight: bold;
+}

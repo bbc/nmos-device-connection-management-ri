@@ -1,0 +1,2 @@
+a2ensite nmos-ui.conf
+service apache2 reload

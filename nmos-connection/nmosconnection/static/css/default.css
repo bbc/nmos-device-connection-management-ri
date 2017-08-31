@@ -1,0 +1,22 @@
+#sender-container{
+    background-color: #004d00;
+    color: #FFF;
+}
+
+#receiver-container{
+    background-color: #FF8000;
+    color: #FFF;
+}
+
+.port-container{
+    padding: 5px;
+}
+
+.add-container{
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.delete-button{
+    cursor:pointer;
+}

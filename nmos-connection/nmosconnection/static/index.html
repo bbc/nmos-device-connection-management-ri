@@ -1,0 +1,102 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>NMOS Connection Management Mock Driver</title>
+    <meta name="description" content="NMOS Connection Management Mock Driver">
+    <meta name="author" content="BBC RD">
+
+    <link rel="stylesheet" href="css/default.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/form.js"></script>
+  </head>
+
+  <body>
+    <div class='container-fluid'>
+      <h1>NMOS Connection Management - Mock Driver Interface</h1>
+      <div class='col-md-6'>
+        <div class='add-container' id='sender-container'>
+          <h2>Senders</h2>
+          <form class='form'>
+            <label>Number of legs
+              <select class="form-control" name="sender-legs" id='sender-legs'>
+                <option>1</option>
+                <option>2</option>
+              </select>
+            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="sender-fec" id="sender-fec">Enable FEC
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="sender-rtcp" id="sender-rtcp">Enable RTCP
+              </label>
+            </div>
+            <button type="button" class="btn btn-primary" onClick='addSender()'>Add Sender</button>
+          </form>
+        </div>
+        <div>
+          <table class='table' id='senders-table'>
+            <thead>
+              <tr>
+                <th>uuid</th>
+                <th width='20px'>Legs</th>
+                <th width='20px'>FEC</th>
+                <th width='20px'>RTCP</th>
+                <th width='20px'><span class="glyphicon glyphicon-trash"></span></th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class='col-md-6'>
+        <div class='add-container' id='receiver-container'>
+          <h2>Receivers</h2>
+          <form class='form'>
+            <label>Number of legs
+              <select class="form-control" id='receiver-legs'>
+                <option>1</option>
+                <option>2</option>
+              </select>
+            </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name='receiver-fec' id='receiver-fec'>Enable FEC
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name='sender-rtcp' id='receiver-rtcp'>Enable RTCP
+              </label>
+            </div>
+            <button type="button" class="btn btn-primary" onclick='addReceiver()'>Add Receiver</button>
+          </form>
+        </div>
+        <table class='table' id='receivers-table'>
+          <thead>
+            <tr>
+              <th>uuid</th>
+              <th width='20px'>Legs</th>
+              <th width='20px'>FEC</th>
+              <th width='20px'>RTCP</th>
+              <th width='20px'><span class="glyphicon glyphicon-trash"></span></th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      (function(){
+        doInit();
+      })();
+    </script>
+  </body>
+</html>

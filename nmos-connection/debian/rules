@@ -1,0 +1,2 @@
+%:
+	dh $@ --with python2 --buildsystem=python_distutils

@@ -1,0 +1,11 @@
+Source: python-connectionmanagement
+Maintainer: Simon Rankine <simon.rankine@bbc.co.uk>
+Section: python
+Priority: optional
+Build-Depends: python-all (>= 2.7.5-5), debhelper (>= 7)
+Standards-Version: 3.9.1
+
+Package: nmos-connection
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, nmos-common
+Description: Connection Management API implementation

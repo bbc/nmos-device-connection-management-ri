@@ -1,0 +1,9 @@
+#!/usr/bin/python
+
+import gevent
+
+if __name__ == "__main__":
+    from nmosconnection.service import ConnectionManagementService
+    cm = ConnectionManagementService()
+    cm.run()
+

@@ -1,0 +1,44 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "Parameters concerned with activation of the transport parameters",
+    "type": "object",
+    "additionalProperties": false,
+    "required":[
+        "mode",
+        "requested_time",
+        "activation_time"
+    ],
+    "properties":{
+        "mode": {
+            "description": "mode of activation: immediate (on message rx), scheduled_absolute (when internal clock >= requested_time), scheduled_relative (when internal clock >= time of message rx + requested_time), activate_immediate (immediate activation requested), null (no activation scheduled). This parameter returns to null once an activation is completed. In a immediate activation the response to the PATCH request this field will be set to 'activate_immediate', but will be null in any subsequent GET requests.",
+            "type": [
+                "string",
+                "null"
+            ],
+            "enum": [
+                "activate_immediate",
+                "activate_scheduled_absolute",
+                "activate_scheduled_relative",
+                null
+            ]
+        },
+        "requested_time": {
+            "description": "String formatted TAI timestamp (<seconds>:<nanoseconds>) indicating time (absolute or relative) for activation. This field returns to null once the activation is completed. For an immiedate activation this field will always be null, even in the response to the PATCH request.",
+            "type": [
+                "string",
+                "null"
+            ],
+            "default": null,
+            "pattern": "^[0-9]+:[0-9]+$"
+        },
+        "activation_time": {
+            "description": "String formatted TAI timestamp (<seconds>:<nanoseconds>) indicating Time (absolute or relative) the sender will actually activate for scheduled activations, or the time acitvation occured for immediate activations. Is set to null once the activation has completed. For immediate activations, this property will be the time the activation acutally occured in the response to the PATCH request, but null in any GET requests thereafter.",
+            "type": [
+                "string",
+                "null"
+            ],
+            "default": null,
+            "pattern": "^[0-9]+:[0-9]+$"
+        }
+    }
+}
