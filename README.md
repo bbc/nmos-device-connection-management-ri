@@ -15,59 +15,28 @@ For the best experience:
 
 The VM will bind to three host machine ports: 8080 to present the API itself, 8858 to present the mock driver user interfaces and 8860 to present the API user interface. If these ports are already in use on the host machine the bindings may be changed in the Vagrant file.
 
-First install Debian packaging dependencies on the host:
-```
-sudo apt-get update
-sudo apt-get install python-all debhelper pbuilder dh-python apache2-dev python-netifaces python-gevent varnish python-flask python-jinja2 python-werkzeug python-zmq python-requests
-```
+### Installing behind a proxy
 
 [Optionally] Install vagrant proxyconf plugin if you want to easily pass host machine proxy configuration to the guest machines:
 ```
 vagrant plugin install vagrant-proxyconf
 ```
 
-Set environment http proxy variables (these will be passed to Vagrant VMs for use by apt and pip if Vagrant proxyconf plugin is installed):
+Set environment http proxy variables (these will be passed to Vagrant VMs for use by git, apt and pip if Vagrant proxyconf plugin is installed):
 ```
 export http_proxy=http://<path-to-your-proxy:proxy-port>
 export https_proxy=https://<path-to-your-proxy:proxy-port>
 ```
 
+For Windows users the proxy settings will have to be added to the vagrant file. Please see the [vagrant-proxyconf github](https://github.com/tmatilai/vagrant-proxyconf) for details.
+
 ### Start
 
-Now make the Debian packages from source:
-```
-nmos-connection-management-ri/$ make deb
-nmos-connection-management-ri/$ vagrant up
-```
-
-This will start two Ubuntu 16.04 VMs and run provisioning scripts to install external python dependencies and the previously built Debian packages.
-
-### Alternative method for Windows users
-
-As it is not possible to run one virtual machine inside another a slightly different approach is required if using a Windows host:
-
-Firstly download Ubuntu 16.04 from https://www.ubuntu.com/download/server and set up as a virtual machine (using Virtualbox, hyper-v etc).
-
-Once the machine is installed log into it and carry out the following commands:
-
-If you are behind a http proxy you will need to export http_proxy and https_proxy as per usual.
+To bring up the vagrant machine:
 
 ```
-
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install python-all debhelper pbuilder dh-python apache2-dev python-netifaces python-gevent varnish python-flask python-jinja2 python-werkzeug python-zmq python-pip python-requests git apache2 icu-devtools libicu-dev libxml2-dev
-sudo git clone https://github.com/bbc/nmos-connection-management-ri
-cd nmos-device-connection-management-ri
-sudo make deb
-sudo -E bash provision_node_no_vagrant.sh
-
+vagrant up
 ```
-
-In order to be able to see the API and user interfaces you will need to allow ports 80, 8858 and 8860 to be forwarded to the host machine. Note that the API user interface will expect the API to be on port 8080. Either map port 80 to port 8080 on the host, or set the API user interface to use port 80 using the box in the top left hand corener of the interface.
-
-Instructions for VirtualBox: https://www.virtualbox.org/manual/ch06.html#natforward
-Instructions for HyperV: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/setup-nat-network
 
 ## Mock Driver User Interface
 

@@ -16,7 +16,7 @@
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
-apt-get install python-pip -y
+apt-get install python-pip devscripts apache2-dev debhelper -y
 pip install --upgrade pip
 
 pip install setuptools
@@ -28,7 +28,12 @@ git clone https://github.com/bbc/nmos-common.git
 cd ~/nmos-common
 python setup.py install
 
-apt-get -f install /vagrant/reverse-proxy_0.1.0_all.deb -y
+#TODO at git clone
+cd /vagrant/nmos-reverse-proxy
+make deb
+dpkg -i ../reverse-proxy_*_all.deb
+sudo apt-get -f -y install
+
 
 cd /vagrant/nmos-connection
 python setup.py install
