@@ -1,7 +1,0 @@
-nmoscommon
---------------
-
-Package of common, reusable modules for nmos open source implementation
-
-Requirements (put these in setup.py):
-flask

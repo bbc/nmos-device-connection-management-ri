@@ -71,7 +71,9 @@ def find_packages(path, base=""):
 
 
 packages = find_packages(".")
+
 package_names = packages.keys()
+print package_names
 
 packages_required = [
                     ]

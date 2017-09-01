@@ -19,27 +19,33 @@ apt-get update
 apt-get install python-pip -y
 pip install --upgrade pip
 
-pip install --no-deps gevent=="1.0.2"
-pip install --no-deps greenlet=="0.4.2"
-pip install --no-deps gevent-websocket=="0.9.3"
-pip install --no-deps six=="1.10.0"
-pip install --no-deps flask=="0.10.1"
-pip install jinja2=="2.7.2"
-pip install --no-deps werkzeug=="0.9.4"
-pip install --no-deps itsdangerous=="0.24"
-pip install --no-deps socketio-client=="0.5.3"
-pip install --no-deps flask-sockets=="0.1"
-pip install --no-deps pyzmq=="14.0.1"
-pip install --no-deps pygments=="1.6"
-pip install --no-deps python-dateutil
-pip install --no-deps flask-oauthlib=="0.9.1"
-pip install --no-deps ws4py=="0.3.2"
-pip install --no-deps requests=="2.2.1"
-pip install jsonschema=="2.3.0"
-pip install netifaces
+pip install setuptools
 
-apt-get -f install /vagrant/nmos-common_0.1.0_all.deb -y
+cd ~/
+
+git clone https://github.com/bbc/nmos-common.git
+
+cd ~/nmos-common
+python setup.py install
+
 apt-get -f install /vagrant/reverse-proxy_0.1.0_all.deb -y
-apt-get -f install /vagrant/nmos-connection_0.1.0_all.deb -y
+
+cd /vagrant/nmos-connection
+python setup.py install
+
+cp -r /vagrant/nmos-connection/bin/connectionmanagement /usr/bin
+cp -r /vagrant/nmos-connection/share/ipp-connectionmanagement /usr/share
+cp -r /vagrant/nmos-connection/etc/apache2/sites-available/*.conf /etc/apache2/sites-available/
+cp -r /vagrant/nmos-connection/etc/init/nmosconnection.conf /etc/init
+cp -r /vagrant/nmos-connection/lib/systemd/system/nmosconnection.service /lib/systemd/system
+cp -r /vagrant/nmos-connection/var/www/connectionManagementDriver /var/www
+cp -r /vagrant/nmos-connection/var/www/connectionManagementUI /var/www
+chmod +x /usr/bin/connectionmanagement
+
+ln -s /lib/init/upstart-job /etc/init.d/nmosconnection
+ln -s /lib/systemd/system/nmosconnection.service /etc/systemd/system/multi-user.target.wants/nmosconnection.service
 
 service nmosconnection start
+service apache2 restart
+a2ensite nmos-ui.conf
+service apache2 reload
