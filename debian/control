@@ -5,7 +5,7 @@ Priority: optional
 Build-Depends: python-all (>= 2.7.5-5), debhelper (>= 7)
 Standards-Version: 3.9.1
 
-Package: nmos-connection
+Package: python-connectionmanagement
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, nmos-common
+Depends: ${misc:Depends}, ${python:Depends}, python-nmoscommon
 Description: Connection Management API implementation
