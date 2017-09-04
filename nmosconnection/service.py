@@ -22,8 +22,7 @@ import signal
 import gevent
 
 from nmoscommon.httpserver import HttpServer
-from nmoscommon.logger import Logger as IppLogger
-from api import ConnectionManagementAPI
+from api import ConnectionManagementAPI, QUERY_APINAME, QUERY_APIVERSION, DEVICE_ROOT
 from nmosDriver import NmosDriver
 from constants import WS_PORT
 
@@ -32,6 +31,16 @@ class ConnectionManagementService:
 
     def __init__(self, logger=None):
         self.running = False
+        try:
+            from ipppython.ipplogger import IppLogger
+            self.logger = IppLogger("conmanage")
+            from ipppython.facade import Facade
+            self.facade = Facade("{}/{}".format(QUERY_APINAME, QUERY_APIVERSION), address="ipc:///tmp/ips-nodefacade", logger=self.logger)
+            self.logger.writeInfo("Using facade")
+        except ImportError:
+            self.logger.writeWarning("Could not find ipppython facade")
+            from nmoscommon.logger import Logger as IppLogger
+            self.facadePresent = False
         if logger is None:
             self.logger = IppLogger("conmanage")
         self.logger.writeDebug("Running Connection Management Service")
@@ -58,11 +67,23 @@ class ConnectionManagementService:
         self.logger.writeDebug("Running on port: {}"
                                .format(self.httpServer.port))
 
-        # Start the mock driver
-        self.driver = NmosDriver(
-            self.httpServer.api,
-            self.logger
-        )
+        if self.facade:
+            self.facade.register_service("http://127.0.0.1:{}".format(self.httpServer.port), DEVICE_ROOT[1:])
+        try:
+            from nmosconnectiondriver.httpIpstudioDriver import httpIpstudioDriver
+            self.logger.writeInfo("Using ipstudio driver")
+            # Start the IPStudio driver
+            self.driver = httpIpstudioDriver(
+                self.httpServer.api,
+                self.logger,
+                self.facade
+            )
+        except ImportError:
+            # Start the mock driver
+            self.driver = NmosDriver(
+                self.httpServer.api,
+                self.logger
+            )
 
     def run(self):
         '''Call this to run the API in keep-alive (blocking) mode'''
