@@ -1,5 +1,8 @@
 recursive-include debian *
 recursive-include etc *
+recursive-include share *
 recursive-include bin *
+recursive-include lib *
+recursive-include var *
 recursive-include nmosconnection
 include README
