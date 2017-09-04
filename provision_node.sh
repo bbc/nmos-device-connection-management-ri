@@ -24,12 +24,12 @@ pip install setuptools
 cd ~/
 
 git clone https://github.com/bbc/nmos-common.git
+git clone https://github.com/bbc/nmos-reverse-proxy.git
 
 cd ~/nmos-common
 python setup.py install
 
-#TODO at git clone
-cd /vagrant/nmos-reverse-proxy
+cd ~/nmos-reverse-proxy
 make deb
 dpkg -i ../reverse-proxy_*_all.deb
 sudo apt-get -f -y install
