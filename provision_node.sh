@@ -35,16 +35,16 @@ dpkg -i ../reverse-proxy_*_all.deb
 sudo apt-get -f -y install
 
 
-cd /vagrant/nmos-connection
+cd /vagrant
 python setup.py install
 
-cp -r /vagrant/nmos-connection/bin/connectionmanagement /usr/bin
-cp -r /vagrant/nmos-connection/share/ipp-connectionmanagement /usr/share
-cp -r /vagrant/nmos-connection/etc/apache2/sites-available/*.conf /etc/apache2/sites-available/
-cp -r /vagrant/nmos-connection/etc/init/nmosconnection.conf /etc/init
-cp -r /vagrant/nmos-connection/lib/systemd/system/nmosconnection.service /lib/systemd/system
-cp -r /vagrant/nmos-connection/var/www/connectionManagementDriver /var/www
-cp -r /vagrant/nmos-connection/var/www/connectionManagementUI /var/www
+cp -r /vagrant/bin/connectionmanagement /usr/bin
+cp -r /vagrant/share/ipp-connectionmanagement /usr/share
+cp -r /vagrant/etc/apache2/sites-available/*.conf /etc/apache2/sites-available/
+cp -r /vagrant/etc/init/nmosconnection.conf /etc/init
+cp -r /vagrant/lib/systemd/system/nmosconnection.service /lib/systemd/system
+cp -r /vagrant/var/www/connectionManagementDriver /var/www
+cp -r /vagrant/var/www/connectionManagementUI /var/www
 chmod +x /usr/bin/connectionmanagement
 
 ln -s /lib/init/upstart-job /etc/init.d/nmosconnection
