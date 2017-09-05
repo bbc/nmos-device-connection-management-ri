@@ -14,7 +14,7 @@
 import os
 from nmoscommon.webapi import WebAPI, route, basic_route
 from flask import request, abort, Response, redirect
-from jsonschema import validate, FormatChecker, ValidationError
+from jsonschema import validate, FormatChecker, ValidationError, SchemaError
 from abstractDevice import StagedLockedException
 from sdpParser import SdpManager
 import traceback
@@ -103,7 +103,7 @@ class ConnectionManagementAPI(WebAPI):
         response = {
             "code": code,
             "error": message,
-            "debug": str(traceback.format_exc())
+            "debug": traceback.extract_stack()
         }
         if id is not None:
             response['id'] = id
@@ -290,8 +290,8 @@ class ConnectionManagementAPI(WebAPI):
     def applyTransportFile(self, request, device):
         try:
             transportManager = self.getTransportManager(device)
-        except:
-            return (500, self.errorResponse(500, "Internal error while updating transport file"))
+        except BaseException as e:
+            return (500, self.errorResponse(500, "Internal error while updating transport file:{}".format(str(e))))
         try:
             transportManager.update(request)
         except KeyError as err:
@@ -300,10 +300,10 @@ class ConnectionManagementAPI(WebAPI):
             return (400, self.errorResponse(400, str(err)))
         except ValidationError as err:
             return (400, self.errorResponse(400, str(err)))
+        except SchemaError as err:
+            return (400, self.errorResponse(400, str(err)))
         except StagedLockedException as e:
             return (423, self.errorResponse(423, "Resource is locked due to a pending activation"))
-        except:
-            return (500, self.errorResponse(500, "Internal error while updating transport file"))
         return (200, {})
 
     def applyActivation(self, request, uuid):

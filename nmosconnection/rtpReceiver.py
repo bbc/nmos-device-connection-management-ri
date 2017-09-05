@@ -210,11 +210,9 @@ class RtpReceiver(AbstractDevice):
                 if key in params:
                     params.pop(key)
         # Merge in extra requirements required by constraints
-        for key, entry in params.iteritems():
-            if key in self.constraints[leg]:
-                entry.update(self.constraints[leg][key])
-        # Put auto into the interfaces enum
-        params['interface_ip']['enum'].append("auto")
+        #for key, entry in params.iteritems():
+         #   if key in self.constraints[leg]:
+         #       entry.update(self.constraints[leg][key])
         obj['items']['properties'] = params
         return obj
 
