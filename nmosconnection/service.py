@@ -89,10 +89,15 @@ class ConnectionManagementService:
         '''Call this to run the API in keep-alive (blocking) mode'''
         self.running = True
         self.start()
+        itercount = 0
         while self.running:
             gevent.sleep(1)
+            itercount += 1
+            if itercount == 5:
+                self.facade.heartbeat_service()
+                itercount = 0
         self._cleanup()
-
+        
     def _cleanup(self):
         self.httpServer.stop()
 
