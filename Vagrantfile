@@ -26,7 +26,6 @@ Vagrant.configure("2") do |config|
   	end
 
   	connection.vm.network "forwarded_port", type: "dhcp", guest: 80, host: 8080
-        connection.vm.network "forwarded_port", type: "dhcp", guest: 8856, host: 8856
   	connection.vm.network "forwarded_port", type: "dhcp", guest: 8858, host: 8858
   	connection.vm.network "forwarded_port", type: "dhcp", guest: 8860, host: 8860
   	connection.vm.provision :shell, path: "provision_node.sh"

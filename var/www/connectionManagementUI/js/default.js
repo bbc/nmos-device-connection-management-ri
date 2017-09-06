@@ -29,7 +29,7 @@ function updateRoot(){
 }
 
 function updateSenderTransportFile(uuid){
-    $('#sender-transport-link').attr('href', root + "single/senders/" + uuid + "active/");
+    $('#sender-transport-link').attr('href', root + "single/senders/" + uuid + "transportfile/");
     $('#sender-active-type').show();
 }
 

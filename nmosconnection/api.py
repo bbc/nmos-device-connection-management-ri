@@ -262,8 +262,6 @@ class ConnectionManagementAPI(WebAPI):
             return self.errorResponse(400, str(e))
         except StagedLockedException:
             return (423, self.errorResponse(423, "Resource is locked due to a pending activation"))
-        except:
-            return (500, self.errorResponse(500, "Error while parsing receiver ID"))
         return (200, {})
 
     def applySenderId(self, id, device):
@@ -273,8 +271,6 @@ class ConnectionManagementAPI(WebAPI):
             return (400, self.errorResponse(400, str(e)))
         except StagedLockedException:
             return (423, self.errorResponse(423, "Resource is locked due to a pending activation"))
-        except:
-            return (500, self.errorResponse(500, "Error while parsing sender ID"))
         return (200, {})
 
     def applyTransportParams(self, request, device):
@@ -288,10 +284,7 @@ class ConnectionManagementAPI(WebAPI):
         return (200, {})
         
     def applyTransportFile(self, request, device):
-        try:
-            transportManager = self.getTransportManager(device)
-        except BaseException as e:
-            return (500, self.errorResponse(500, "Internal error while updating transport file:{}".format(str(e))))
+        transportManager = self.getTransportManager(device)
         try:
             transportManager.update(request)
         except KeyError as err:
@@ -300,8 +293,6 @@ class ConnectionManagementAPI(WebAPI):
             return (400, self.errorResponse(400, str(err)))
         except ValidationError as err:
             return (400, self.errorResponse(400, str(err)))
-        except SchemaError as err:
-            return (400, self.errorResponse(400, str(err)))
         except StagedLockedException as e:
             return (423, self.errorResponse(423, "Resource is locked due to a pending activation"))
         return (200, {})
@@ -309,14 +300,9 @@ class ConnectionManagementAPI(WebAPI):
     def applyActivation(self, request, uuid):
         try:
             activator = self.getActivator(uuid)
-        except:
-            return (500, self.errorResponse(500, str(err)))
-        try:
             toReturn = activator.parseActivationObject(request)
         except ValidationError as err:
             return (400, self.errorResponse(400, str(err)))
-        except:
-            return (500, self.errorResponse(500, "Error encountered applying activation"))
         return toReturn
 
     @route(SINGLE_ROOT + '<sr>/<device>/active/', methods=['GET'])

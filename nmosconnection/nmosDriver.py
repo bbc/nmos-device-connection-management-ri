@@ -157,6 +157,8 @@ class NmosDriverWebApi(WebAPI):
         for leg in range(0,legs):
             sender.addInterface(self.generateRandomUnicast(), leg)
         sender.setDestinationSelector(self.destinationSelector)
+        fileFactory = senderFileFactory(sender)
+        sender.setActivateCallback(fileFactory.activateCallback)
         sender.activateStaged()
         uuid = str(uuid4())
         self.manager.addSender(sender, uuid)
@@ -215,3 +217,82 @@ class NmosDriverWebApi(WebAPI):
             number = random.uniform(1,254)
             toReturn = toReturn + str(int(number))
         return toReturn
+
+class senderFileFactory:
+
+    def __init__(self, interface):
+        self.interface = interface
+
+    def activateCallback(self):
+        if self.checkIsMulticast(self.interface.getActiveParameter("destination_ip")):
+            self.interface.transportFile = self.generateMulticastSdp()
+        else:
+            self.interface.transportFile = self.generateUnicastSdp()
+
+    def generateMulticastSdp(self):
+        """Generates an sdp when the sender has been instructed
+        to use a multicast address"""
+        sourceIP = self.interface.getActiveParameter("source_ip")
+        sourcePort = self.interface.getActiveParameter("source_port")
+        destIP = self.interface.getActiveParameter("destination_ip")
+        return MULTICAST_SDP_TEMPLATE.format(
+            sourceIP,
+            sourcePort,
+            destIP,
+            destIP,
+            sourceIP
+        )
+
+    def generateUnicastSdp(self):
+        sourceIP = self.interface.getActiveParameter("source_ip")
+        sourcePort = self.interface.getActiveParameter("source_port")
+        destIP = self.interface.getActiveParameter("destination_ip")
+        return UNICAST_SDP_TEMPLATE.format(
+            sourceIP,
+            sourcePort,
+            destIP
+        )
+
+    def checkIsMulticast(self, addr):
+        return 223 < int(addr.rsplit(".")[0]) < 240
+
+MULTICAST_SDP_TEMPLATE = """v=0
+o=- 1504701982 1504701982 IN IP4 {}
+s=NMOS Example Stream
+t=0 0
+m=video {} RTP/AVP 103
+c=IN IP4 {}/32
+a=source-filter: incl IN IP4 {} {}
+a=ts-refclk:ptp=IEEE1588-2008:08-00-11-ff-fe-21-e1-b0
+a=rtpmap:103 raw/90000
+a=fmtp:103 sampling=YCbCr-4:2:2; width=1920; height=1080; depth=10; colorimetry=BT709-2
+a=mediaclk:direct=1666136768 rate=90000
+a=framerate:25
+a=extmap:1 urn:x-nmos:rtp-hdrext:origin-timestamp
+a=extmap:2 urn:ietf:params:rtp-hdrext:smpte-tc 3.6e+03@90000/25
+a=extmap:3 urn:x-nmos:rtp-hdrext:flow-id
+a=extmap:4 urn:x-nmos:rtp-hdrext:source-id
+a=extmap:5 urn:x-nmos:rtp-hdrext:grain-flags
+a=extmap:7 urn:x-nmos:rtp-hdrext:sync-timestamp
+a=extmap:9 urn:x-nmos:rtp-hdrext:grain-duration"""
+
+UNICAST_SDP_TEMPLATE = """
+v=0
+o=- 1504703924 1504703924 IN IP4 {}
+s=NMOS Example Stream
+t=0 0
+m=video {} RTP/AVP 103
+c=IN IP4 {}
+a=ts-refclk:ptp=IEEE1588-2008:08-00-11-ff-fe-21-e1-b0
+a=rtpmap:103 raw/90000
+a=fmtp:103 sampling=YCbCr-4:2:2; width=1920; height=1080; depth=10; colorimetry=BT709-2
+a=mediaclk:direct=1595650436 rate=90000
+a=framerate:25
+a=extmap:1 urn:x-nmos:rtp-hdrext:origin-timestamp
+a=extmap:2 urn:ietf:params:rtp-hdrext:smpte-tc 3.6e+03@90000/25
+a=extmap:3 urn:x-nmos:rtp-hdrext:flow-id
+a=extmap:4 urn:x-nmos:rtp-hdrext:source-id
+a=extmap:5 urn:x-nmos:rtp-hdrext:grain-flags
+a=extmap:7 urn:x-nmos:rtp-hdrext:sync-timestamp
+a=extmap:9 urn:x-nmos:rtp-hdrext:grain-duration
+"""

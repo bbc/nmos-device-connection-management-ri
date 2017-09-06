@@ -242,7 +242,6 @@ class RtpSender(AbstractDevice):
         for key, entry in params.iteritems():
             if key in self.constraints[leg]:
                 entry.update(self.constraints[leg][key])
-        params['source_ip']['enum'].append("auto")
         obj['items']['properties'] = params
         return obj
 
