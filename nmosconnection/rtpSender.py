@@ -258,7 +258,7 @@ class RtpSender(AbstractDevice):
                         toReturn[leg].pop(key)        
         return toReturn
 
-    def getActiveTransportFileURL():
+    def getActiveTransportFileURL(self):
         return self.transportFile
 
     def _setTp(self, value, field, leg):
