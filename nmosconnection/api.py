@@ -339,8 +339,9 @@ class ConnectionManagementAPI(WebAPI):
             device = self.getDevice('senders', device)
         except:
             abort(404)
-        redirectUrl = device.getActiveTransportFileURL()
-        return redirect(redirectUrl, code=307)
+        resp = Response(device.transportFile)
+        resp.headers['content-type'] = 'application/sdp'
+        return resp
 
     """Begin bulk API routes"""
 
