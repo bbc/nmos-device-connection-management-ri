@@ -104,7 +104,7 @@ class RtpSender(AbstractDevice):
 
     def _initSourceConstraints(self):
         for leg in range(0, self.legs):
-            self.constraints[leg]['source_ip']['enum'] = []
+            self.constraints[leg]['source_ip']['enum'] = ["auto"]
 
     def addInterface(self, addr, leg=0):
         """Used to add allowed source IPs"""
@@ -254,7 +254,10 @@ class RtpSender(AbstractDevice):
                         toReturn[leg].pop(key)
                 if not self._enableRtcp:
                     if key in self.rtcpParams:
-                        toReturn[leg].pop(key)        
+                        toReturn[leg].pop(key)
+                if value == "auto":
+                    toReturn[leg].pop(key)
+            toReturn[leg]['source_ip']['enum'].remove("auto")
         return toReturn
 
     def getActiveTransportFileURL(self):

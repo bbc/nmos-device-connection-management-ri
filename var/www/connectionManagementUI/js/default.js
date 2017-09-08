@@ -241,6 +241,9 @@ function populateReceiverInterfaceList(constraints, leg, callback){
         option.innerHTML = constraints[leg]['interface_ip']['enum'][i]
         select.appendChild(option)
     }
+    var option = document.createElement("option")
+    option.innerHTML = "auto"
+    select.appendChild(option)
     callback()
 }
 
@@ -252,6 +255,9 @@ function populateSenderSourceList(constraints, leg, callback){
         option.innerHTML = constraints[leg]['source_ip']['enum'][i]
         select.appendChild(option)
     }
+    var option = document.createElement("option")
+    option.innerHTML = "auto"
+    select.appendChild(option)
     callback()
 }
 

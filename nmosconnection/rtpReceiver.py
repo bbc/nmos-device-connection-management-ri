@@ -93,7 +93,7 @@ class RtpReceiver(AbstractDevice):
 
     def _initInterfaceConstraints(self):
         for leg in range(0, self.legs):
-            self.constraints[leg]['interface_ip']['enum'] = []
+            self.constraints[leg]['interface_ip']['enum'] = ["auto"]
 
     def addInterface(self, addr, leg=0):
         """Used to add allowed revieve interfaces"""
@@ -210,9 +210,9 @@ class RtpReceiver(AbstractDevice):
                 if key in params:
                     params.pop(key)
         # Merge in extra requirements required by constraints
-        #for key, entry in params.iteritems():
-         #   if key in self.constraints[leg]:
-         #       entry.update(self.constraints[leg][key])
+        for key, entry in params.iteritems():
+           if key in self.constraints[leg]:
+               entry.update(self.constraints[leg][key])
         obj['items']['properties'] = params
         return obj
 
@@ -225,7 +225,8 @@ class RtpReceiver(AbstractDevice):
                         toReturn[leg].pop(key)
                 if not self._enableRtcp:
                     if key in self.rtcpParams:
-                        toReturn[leg].pop(key)    
+                        toReturn[leg].pop(key)
+            toReturn[leg]['interface_ip']['enum'].remove("auto")
         return toReturn
 
     def getActiveSenderID(self):
