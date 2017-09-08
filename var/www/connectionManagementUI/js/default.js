@@ -1,4 +1,5 @@
 var transportParams = {};
+var masterEnable = []
 var receiverId = "";
 var senderId = "";
 var root = "http://localhost:8080/x-nmos/connection/v1.0/";
@@ -7,6 +8,8 @@ function doInit(){
     checkForSavedRoot();
     transportParams['receiver'] = [];
     transportParams['sender'] = [];
+    masterEnable['sender'] = false
+    masterEnable['receiver'] = false
     updatePortList('sender');
     updatePortList('receiver');
     $("#api-root-button").click(updateRoot);
@@ -57,6 +60,7 @@ function legChange(type, uuid, paramList){
 
 function updateForm(type, uuid){
     $('#' + type + '-accordion').show();
+    $('#' + type + '-enable-form').show();
     var form = document.getElementById(type + 's-form');
     form.childNodes.forEach(function(node){
         if(node.tagName == "DIV" && node.id != (type +  "-update-group") && node.id != (type + "-legs-group")){
@@ -203,6 +207,7 @@ function getParamList(type, uuid, paramList, leg){
             leg = 0
         }
         transportParams[type] = port.transport_params;
+        masterEnable[type] = port.master_enable;
         if(type == "sender"){
             receiverId = port.receiver_id;
         }else{
@@ -265,6 +270,8 @@ function applyParams(type, leg){
             }
         }
     }
+    enable = document.getElementById(type + "-master_enable")
+    enable.checked = masterEnable[type]
     if(type == "sender"){
         $('#sender-receiver_id')[0].value = receiverId;
     }else{
@@ -360,6 +367,8 @@ function scrapeForm(type, paramsList, leg){
                 transportParams[type][leg][element] = input.value;
             }
         }
+        enable = $("#" + type + "-master_enable")[0]
+        masterEnable[type] = enable.checked
         if(type == "sender"){
             receiverId = $('#sender-receiver_id')[0].value;
         }else{
@@ -383,6 +392,7 @@ function buttonClick(type, uuid, paramList, numLegs){
     for(var i = 0; i < numLegs; i++){
         message.transport_params[i] = transportParams[type][i];
     }
+    message.master_enable = masterEnable[type]
     if(type == "sender"){
         if(receiverId != ""){
             message.receiver_id = receiverId;
@@ -429,6 +439,10 @@ function getActiveTransportParams(type, uuid){
     });
     doGet(url, function(response){
         var div = $('#' + type + '-active-params');
+        enable = response.master_enable;
+        var p = document.createElement("p");
+        p.innerHTML = "<span class='strong'>master_enable:</span> " + enable;
+        div.append(p);
         for(var outerKey in response.transport_params){
             transport_params = response.transport_params[outerKey];
             var h3 = document.createElement("h3");
@@ -438,7 +452,8 @@ function getActiveTransportParams(type, uuid){
                 var p = document.createElement("p");
                 p.innerHTML = "<span class='strong'>" + key + ":</span> " + transport_params[key];
                 div.append(p);
-            } 
+            }
+            
         }
     });
 }
