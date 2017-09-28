@@ -178,8 +178,11 @@ class SdpManager():
                     groupsize = 1
             elif re.match("^ *IN +IP6 +.*$", value):
                 # IPV6 Connection
+                match = re.match("^ *IN +IP6 +([^/]+) *$", value)
                 ntype, atype = "IN", "IP6"
-                addr, groupsize = match.groups()
+                addr= match.groups()[0]
+                groupsize = 1
+                ttl = 1
             else:
                 # Something else?!
                 return False
@@ -189,16 +192,16 @@ class SdpManager():
         elif type == "a":
             # Looks for media attributes - I'm only interested in finding
             # source filters (RFC4570) to work out the SSMC destination address
-            if re.match("^.*source-filter:incl +IN +IP4 +.*", value):
+            if re.match("^.*source-filter: +incl +IN +IP4 +.*", value):
                 # IPV4 Source filter
                 ntype, atype = "IN", "IP4"
                 match = re.match("^.*IN +IP4+ (?:((?:\d+\.?)+)) (?:((?:\d+\.?)+))", value)
                 dest, source = match.groups(match)
                 return type, 'source-filter', (ntype, atype, dest, source)
-            elif re.match("^.*source-filter:incl +IN +IP6 +.*", value):
+            elif re.match("^.*source-filter: +incl +IN +IP6 +.*", value):
                 # IPV6 Source filter
                 ntype, atype = "IN", "IP6"
-                match = re.match("^.*source-filter:incl +IN +IP6 +((?:[\dabcdefABCDEF]{1,4}:?)+) +((?:[\dabcdefABCDEF]{1,4}:?)+)", value)
+                match = re.match("^.*source-filter: +incl +IN +IP6 +((?:[\dabcdefABCDEF]{1,4}:*)+) +((?:[\dabcdefABCDEF]{1,4}:*)+)", value)
                 dest, source = match.groups(match)
                 return type, 'source-filter', (ntype, atype, dest, source)
             else:
