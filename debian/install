@@ -1,5 +1,7 @@
 bin/connectionmanagement usr/bin
 share/ipp-connectionmanagement usr/share
 etc/init/nmosconnection.conf /etc/init
+etc/apache2/sites-available/nmos-api-nmosconnection.conf /etc/apache2/sites-available
+etc/apache2/sites-available/nmos-ui.conf /etc/apache2/sites-available
 lib/systemd/system/nmosconnection.service /lib/systemd/system
 
