@@ -116,7 +116,7 @@ class RtpReceiver(AbstractDevice):
         resolution method this method just returns the first interface
         on the list"""
         try:
-            return self.constraints[leg]['interface_ip']['enum'][0]
+            return self.constraints[leg]['interface_ip']['enum'][1]
         except IndexError:
             self.logger.writeError("Driver has not supplied an interface for the receiver, cannot resolve interface ip")
             return None
