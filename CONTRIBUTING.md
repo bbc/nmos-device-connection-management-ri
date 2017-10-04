@@ -40,18 +40,14 @@ If you haven't signed and emailed the agreement yet then the project owners will
   * We may in the future use a tool that allows you to sign online through your GitHub id and automatically checks this when you submit a pull request.
 
 
-
-
 ## Joining the AMWA Networked Media Incubator
 
 If you wish to get more involved in creating NMOS specifications, working to implement and improve them, and participating in "plugfests", then your organisation may benefit from joining the Advanced Media Workflow Association (AMWA). Further details are at http://amwa.tv
 
 
-
   [join]: https://github.com/join "GitHub sign-up"
 
   [ICLA]: ICLA.md "ICLA"
-
 
   [ICLA-pdf]: ICLA.pdf "ICLA in PDF"
 
