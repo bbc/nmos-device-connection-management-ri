@@ -303,6 +303,8 @@ class ConnectionManagementAPI(WebAPI):
             toReturn = activator.parseActivationObject(request)
         except ValidationError as err:
             return (400, self.errorResponse(400, str(err)))
+        except TypeError as err:
+            return (500, self.errorResponse(500, str(err)))
         return toReturn
 
     @route(SINGLE_ROOT + '<sr>/<device>/active/', methods=['GET'])

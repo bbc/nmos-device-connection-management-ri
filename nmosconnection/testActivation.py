@@ -94,7 +94,7 @@ class TestActivatorModule(unittest.TestCase):
         actual = self.dut.activeRequest
         expected ={
             "mode": None,
-            "requested_time": None
+            "requested_time": None,
             "activation_time": None
         }
         self.assertEqual(actual, expected)

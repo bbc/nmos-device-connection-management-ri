@@ -207,6 +207,9 @@ class TestRtpReceiverBackend(unittest.TestCase):
                 "maximum": 90000,
                 "minimum": 500
             },
+            "interface_ip":{
+                "enum": ["auto"]
+            },
             "fec1D_destination_port":{
                 "miniumum": 4,
                 "maximum": 2000
@@ -216,6 +219,7 @@ class TestRtpReceiverBackend(unittest.TestCase):
                 "minimum": 500
             }
         },{}]
+        data[1] = copy.deepcopy(data[0])
         self.dut.constraints = data
         self.dut._enableFec = False
         self.dut._enableRtcp = False

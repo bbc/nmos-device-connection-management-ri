@@ -157,7 +157,7 @@ s=NMOS Stream
 t=0 0
 m=video 5000 RTP/AVP 103
 c=IN IP4 232.25.176.223/32
-a=source-filter:incl IN IP4 232.25.176.223 172.29.226.31
+a=source-filter: incl IN IP4 232.25.176.223 172.29.226.31
 a=rtpmap:103 raw/90000
 a=fmtp:103 sampling=YCbCr-4:2:2; width=1920; height=1080; depth=10; interlace=1; colorimetry=BT709-2
 a=extmap:1 urn:x-nmos:rtp-hdrext:sync-timestamp
