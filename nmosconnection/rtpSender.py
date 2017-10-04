@@ -143,7 +143,7 @@ class RtpSender(AbstractDevice):
         resolution method this method just returns the first source IP
         on the list"""
         try:
-            return self.constraints[leg]['source_ip']['enum'][0]
+            return self.constraints[leg]['source_ip']['enum'][1]
         except IndexError:
             self.logger.writeError("Driver has not supplied a source for the receiver, cannot resolve source ip")
             return None
