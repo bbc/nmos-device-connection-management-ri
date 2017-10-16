@@ -23,13 +23,16 @@ import os
 import netifaces
 import json
 import random
+import uuid
 from nmoscommon.httpserver import HttpServer
 from nmoscommon.webapi import WebAPI, file_route, route, basic_route
+from nmoscommon.utils import getLocalIP
 from flask import send_from_directory, send_file, request, abort
 from rtpSender import RtpSender
 from rtpReceiver import RtpReceiver
 from uuid import uuid4
 from sdpParser import SdpManager
+from api import SINGLE_ROOT, DEVICE_ROOT, QUERY_APIVERSION
 
 # Set this to change the port the API is presented on
 WS_PORT = 8858
@@ -37,9 +40,10 @@ WS_PORT = 8858
 
 class NmosDriver:
 
-    def __init__(self, manager, logger):
+    def __init__(self, manager, logger, facade):
         # Start the web server used to show the interface
         self.logger = logger
+        self.facade = facade
         self.httpServer = HttpServer(
             NmosDriverWebApi,
             WS_PORT,
@@ -58,6 +62,12 @@ class NmosDriver:
 
         self.logger.writeDebug("Mock driver interface running on port: {}"
                                .format(self.httpServer.port))
+        # Add a device to the registry. This example only has one
+        if self.facade: # Handle test case which doesn't have a mock for the facade yet
+            self.deviceId = str(uuid.uuid4())
+            url = "http://{}{}".format(getLocalIP(), DEVICE_ROOT)
+            type = "urn:x-nmos:control:sr-ctrl/" + QUERY_APIVERSION
+            self.facade.addControl(deviceId, {"type": type, "href": url})
 
 
 class NmosDriverWebApi(WebAPI):

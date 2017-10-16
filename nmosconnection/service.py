@@ -87,7 +87,8 @@ class ConnectionManagementService:
             # Start the mock driver
             self.driver = NmosDriver(
                 self.httpServer.api,
-                self.logger
+                self.logger,
+                self.facade
             )
 
     def run(self):
