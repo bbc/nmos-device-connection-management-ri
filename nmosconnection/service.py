@@ -43,11 +43,11 @@ class ConnectionManagementService:
         except ImportError:
             from nmoscommon.logger import Logger as IppLogger
             from nmoscommon.facade import Facade
+            if logger is None:
+                self.logger = IppLogger("conmanage")
+                self.logger.writeWarning("Could not find ipppython facade")
             self.facade = Facade("{}/{}".format(QUERY_APINAME, QUERY_APIVERSION), address="ipc:///tmp/nmos-nodefacade", logger=self.logger)
             self.foundFacade = True
-        if logger is None:
-            self.logger = IppLogger("conmanage")
-            self.logger.writeWarning("Could not find ipppython facade")
         self.logger.writeDebug("Running Connection Management Service")
         self.httpServer = HttpServer(ConnectionManagementAPI, WS_PORT,
                                      '0.0.0.0', api_args=[self.logger])
