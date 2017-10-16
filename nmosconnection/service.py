@@ -44,7 +44,7 @@ class ConnectionManagementService:
             from nmoscommon.logger import Logger as IppLogger
             from nmoscommon.facade import Facade
             self.facade = Facade("{}/{}".format(QUERY_APINAME, QUERY_APIVERSION), address="ipc:///tmp/nmos-nodefacade", logger=self.logger)
-            self.facadePresent = True
+            self.foundFacade = True
         if logger is None:
             self.logger = IppLogger("conmanage")
             self.logger.writeWarning("Could not find ipppython facade")
