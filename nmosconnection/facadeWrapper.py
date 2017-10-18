@@ -32,6 +32,7 @@ class SimpleFacadeWrapper:
         self.flows = []
         self.sources = []
         self.registerDevice()
+        self.hearbeater = gevent.spawn(self.run)
 
     def registerDevice(self, deviceId):
         # Register device
