@@ -53,7 +53,7 @@ class NmosDriver:
             NmosDriverWebApi,
             WS_PORT,
             '0.0.0.0',
-            api_args=[logger, manager]
+            api_args=[logger, manager, facade]
         )
 
         self.httpServer.start()
@@ -71,7 +71,7 @@ class NmosDriver:
 
 class NmosDriverWebApi(WebAPI):
 
-    def __init__(self, logger, manager):
+    def __init__(self, logger, manager, facade):
         super(NmosDriverWebApi, self).__init__()
         self.logger = logger
         self.manager = manager
@@ -80,8 +80,8 @@ class NmosDriverWebApi(WebAPI):
         self.receivers = {}
         self.sources = {}  # Sources indexed by sender using them
         self.flows = {}  # Flows indexed by sender using them
-        self.facadeWrapper = SimpleFacadeWrapper()
-        self.addDevice()
+        self.deviceId = str(uuid4())
+        self.facadeWrapper = SimpleFacadeWrapper(facade, self.deviceId)
         self.addControl()
 
     @basic_route('/')
@@ -164,11 +164,6 @@ class NmosDriverWebApi(WebAPI):
         else:
             self.manager.removeReceiver(uuid)
             self.receivers.pop(uuid)
-
-    def addDevice(self):
-        # Add a device to the IS-04 facade that we can "be"
-        deviceId = str(uuid4())
-        self.facadeWrapper = deviceId
 
     def addControl(self):
         # Add a device level control to the connection management API
