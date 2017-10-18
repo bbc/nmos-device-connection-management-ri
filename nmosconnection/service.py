@@ -21,6 +21,7 @@ Manages a graceful shutdown on SIGINT, SIGTERM
 
 import signal
 import gevent
+import sys
 
 from nmoscommon.httpserver import HttpServer
 from api import ConnectionManagementAPI, QUERY_APINAME, QUERY_APIVERSION, DEVICE_ROOT
@@ -34,6 +35,7 @@ class ConnectionManagementService:
         self.running = False
         self.foundFacade = False
         try:
+            # Try and run with internal IP Studio facade
             from ipppython.ipplogger import IppLogger
             self.logger = IppLogger("conmanage")
             from ipppython.facade import Facade
@@ -41,6 +43,7 @@ class ConnectionManagementService:
             self.logger.writeInfo("Using facade")
             self.foundFacade = True
         except ImportError:
+            # Use open source NMOS facade instead
             from nmoscommon.logger import Logger as IppLogger
             from nmoscommon.facade import Facade
             if logger is None:
