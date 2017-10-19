@@ -17,6 +17,7 @@
 # It only supports single device operation
 
 import gevent
+import signal
 from gevent import Greenlet
 from nmoscommon.facade import Facade
 from nmoscommon import ptptime
@@ -31,8 +32,11 @@ class SimpleFacadeWrapper:
         self.senders = []
         self.flows = []
         self.sources = []
-        self.registerDevice()
+        self.registerDevice(deviceId)
+        self.running = True
+        gevent.signal( signal.SIGINT, self.stop)
         self.hearbeater = gevent.spawn(self.run)
+        
 
     def registerDevice(self, deviceId):
         # Register device
@@ -107,6 +111,9 @@ controls": [], "max_api_version" : "v1.2" }
         self.updateDevice()
 
     def run(self):
-        while True:
+        while self.running:
             self.facade.heartbeat_service()
             gevent.sleep(4)
+
+    def stop(self):
+        self.running = False
