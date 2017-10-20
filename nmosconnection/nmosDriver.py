@@ -291,7 +291,7 @@ class activationController:
     def __init__(self, portId, port, facadeWrapper, fileFactory = None):
         self.portId = portId
         self.port = port
-        self.facade = facade
+        self.facade = facadeWrapper
         self.fileFactory = fileFactory
 
     def activateSender(self):
