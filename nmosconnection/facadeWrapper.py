@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -128,5 +128,5 @@ controls": [], "max_api_version" : "v1.2" }
     def delSender(self, key):
         self.facade.delResource("sender", key)
         self.senders.pop(key)
-        self.deviceData['senders'].pop(key)
+        self.deviceData['senders'].remove(key)
         self.updateDevice()

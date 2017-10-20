@@ -162,7 +162,6 @@ class NmosDriverWebApi(WebAPI):
             except KeyError:
                 abort(404)
         else:
-            self.manager.removeReceiver(uuid)
             self.delReceiver(uuid)
             self.receivers.pop(uuid)
 
