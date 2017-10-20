@@ -201,7 +201,6 @@ class NmosDriverWebApi(WebAPI):
 
     def addSenderToIS04(self, senderId):
         # Senders need a flow, and flows need sources...
-        senderId = str(uuid4())
         flowId = str(uuid4())
         sourceId = str(uuid4())
         self.facadeWrapper.registerSource(sourceId)
