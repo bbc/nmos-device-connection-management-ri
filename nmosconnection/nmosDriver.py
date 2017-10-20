@@ -295,7 +295,7 @@ class activationController:
         self.fileFactory = fileFactory
 
     def activateSender(self):
-        fileFactory.activateCallback()
+        self.fileFactory.activateCallback()
         self.facadeWrapper.updateSender(self.portId)
 
     def activateReceiver(self):
