@@ -129,8 +129,8 @@ class NmosDriverWebApi(WebAPI):
             except KeyError:
                 abort(404)
         else:
-            self.sender.pop(uuid)
-            self.removeSender(uuid)
+            self.senders.pop(uuid)
+            self.delSender(uuid)
             
     @route('/api/receivers/', methods=['GET', 'POST'])
     def _api_receivers(self):
@@ -153,7 +153,6 @@ class NmosDriverWebApi(WebAPI):
                 uuid = data['uuid']
             except KeyError:
                 return abort(400)
-            self.delReceiver()
 
     @route('/api/receivers/<uuid>/', methods=['GET', 'DELETE'])
     def _api_receiver(self, uuid):
@@ -164,6 +163,7 @@ class NmosDriverWebApi(WebAPI):
                 abort(404)
         else:
             self.manager.removeReceiver(uuid)
+            self.delReceiver()
             self.receivers.pop(uuid)
 
     def addControl(self):
@@ -193,7 +193,8 @@ class NmosDriverWebApi(WebAPI):
         sender.setDestinationSelector(self.destinationSelector)
         # Provide the API a method to call on activation
         fileFactory = senderFileFactory(sender)
-        sender.setActivateCallback(fileFactory.activateCallback)
+        controller = activationController(senderId, sender, self.manager, fileFactory)
+        sender.setActivateCallback(controller.activateSender)
         sender.activateStaged()
         # Add the sender to the IS-05 API
         self.manager.addSender(sender, senderId)
@@ -230,6 +231,8 @@ class NmosDriverWebApi(WebAPI):
             receiver.addInterface(self.generateRandomUnicast(), leg)
         receiver.activateStaged()
         receiverId = str(uuid4())
+        controller = activationController(receiverId, receiver, manager)
+        receiver.setActivateCallback(controller.activateReceiver)
         self.manager.addReceiver(receiver, receiverId)
         # Add receiver to IS-04
         self.facadeWrapper.registerReceiver(receiverId)
@@ -282,3 +285,18 @@ class NmosDriverWebApi(WebAPI):
             number = random.uniform(1,254)
             toReturn = toReturn + str(int(number))
         return toReturn
+
+class activationController:
+
+    def __init__(self, portId, port, facadeWrapper, fileFactory = None):
+        self.portId = portId
+        self.port = port
+        self.facade = facade
+        self.fileFactory = fileFactory
+
+    def activateSender(self):
+        fileFactory.activateCallback()
+        self.facadeWrapper.updateSender(self.portId)
+
+    def activateReceiver(self):
+        self.facadeWrapper.updateReceiver(self.portId)
