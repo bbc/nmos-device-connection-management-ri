@@ -163,7 +163,7 @@ class NmosDriverWebApi(WebAPI):
                 abort(404)
         else:
             self.manager.removeReceiver(uuid)
-            self.delReceiver()
+            self.delReceiver(uuid)
             self.receivers.pop(uuid)
 
     def addControl(self):
