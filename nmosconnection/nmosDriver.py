@@ -193,7 +193,7 @@ class NmosDriverWebApi(WebAPI):
         sender.setDestinationSelector(self.destinationSelector)
         # Provide the API a method to call on activation
         fileFactory = senderFileFactory(sender)
-        controller = activationController(senderId, sender, self.manager, fileFactory)
+        controller = activationController(senderId, sender, self.facadeWrapper, fileFactory)
         sender.setActivateCallback(controller.activateSender)
         sender.activateStaged()
         # Add the sender to the IS-05 API
@@ -231,7 +231,7 @@ class NmosDriverWebApi(WebAPI):
             receiver.addInterface(self.generateRandomUnicast(), leg)
         receiver.activateStaged()
         receiverId = str(uuid4())
-        controller = activationController(receiverId, receiver, manager)
+        controller = activationController(receiverId, receiver, self.facadeWrapper)
         receiver.setActivateCallback(controller.activateReceiver)
         self.manager.addReceiver(receiver, receiverId)
         # Add receiver to IS-04
