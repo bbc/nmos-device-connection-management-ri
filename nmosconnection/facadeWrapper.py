@@ -23,7 +23,7 @@ class SimpleFacadeWrapper:
 
     def __init__(self, facade, deviceId):
         self.facade = facade
-        self.deviceData = ""
+        self.deviceData = {}
         self.receivers = {}
         self.senders = {}
         self.flows = {}
