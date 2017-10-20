@@ -230,7 +230,7 @@ class NmosDriverWebApi(WebAPI):
             receiver.addInterface(self.generateRandomUnicast(), leg)
         receiver.activateStaged()
         receiverId = str(uuid4())
-        self.manager.addReceiver(receiver, uuid)
+        self.manager.addReceiver(receiver, receiverId)
         # Add receiver to IS-04
         self.facadeWrapper.registerReceiver(receiverId)
         return receiverId
