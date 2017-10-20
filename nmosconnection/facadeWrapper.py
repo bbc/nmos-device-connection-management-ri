@@ -16,9 +16,6 @@
 # used by the nmos driver to add and remove entities from the registry
 # It only supports single device operation
 
-import gevent
-import signal
-from gevent import Greenlet
 from nmoscommon.facade import Facade
 from nmoscommon import ptptime
 
@@ -26,17 +23,12 @@ class SimpleFacadeWrapper:
 
     def __init__(self, facade, deviceId):
         self.facade = facade
-        self.facade.register_service("http://127.0.0.1","x-nmos/connection/")
         self.deviceData = ""
         self.receivers = []
         self.senders = []
         self.flows = []
         self.sources = []
         self.registerDevice(deviceId)
-        self.running = True
-        gevent.signal( signal.SIGINT, self.stop)
-        self.hearbeater = gevent.spawn(self.run)
-        
 
     def registerDevice(self, deviceId):
         # Register device
@@ -109,11 +101,3 @@ controls": [], "max_api_version" : "v1.2" }
         self.senders.remove(key)
         self.deviceData['senders'].remove(key)
         self.updateDevice()
-
-    def run(self):
-        while self.running:
-            self.facade.heartbeat_service()
-            gevent.sleep(4)
-
-    def stop(self):
-        self.running = False

@@ -75,6 +75,7 @@ class NmosDriverWebApi(WebAPI):
         super(NmosDriverWebApi, self).__init__()
         self.logger = logger
         self.manager = manager
+        self.facade = facade
         self.path = path = "/var/www/connectionManagementDriver"
         self.senders = {}
         self.receivers = {}
