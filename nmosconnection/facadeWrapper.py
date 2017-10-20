@@ -67,7 +67,7 @@ controls": [], "max_api_version" : "v1.2" }
         # Delete receiver
         self.facade.delResource("receiver", key)
         self.deviceData['receivers'].remove(key)
-        self.receivers.pop.(key)
+        self.receivers.pop(key)
         self.updateDevice()
 
     def registerSource(self, sourceId):
