@@ -127,6 +127,6 @@ controls": [], "max_api_version" : "v1.2" }
 
     def delSender(self, key):
         self.facade.delResource("sender", key)
-        self.senders.remove(key)
+        self.senders.pop(key)
         self.deviceData['senders'].pop(key)
         self.updateDevice()
