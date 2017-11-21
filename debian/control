@@ -7,5 +7,5 @@ Standards-Version: 3.9.1
 
 Package: python-connectionmanagement
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-nmoscommon
+Depends: ${misc:Depends}, ${python:Depends}, python-nmoscommon, python-netifaces
 Description: Connection Management API implementation

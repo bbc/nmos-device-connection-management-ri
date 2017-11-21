@@ -173,9 +173,7 @@ class NmosDriverWebApi(WebAPI):
 
     def addSender(self, legs, rtcp, fec):
         senderId = str(uuid4())
-        # Add sender to IS-04
         self.addSenderToIS04(senderId)
-        # Add sender to IS-05
         self.addSenderToIS05(legs, rtcp, fec, senderId)
         return senderId
 

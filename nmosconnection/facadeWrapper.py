@@ -18,6 +18,7 @@
 
 from nmoscommon.facade import Facade
 from nmoscommon import ptptime
+import netifaces
 
 class SimpleFacadeWrapper:
 
@@ -110,10 +111,20 @@ controls": [], "max_api_version" : "v1.2" }
         self.flows.pop(key)
         self.updateDevice()
 
+    def getInterface(self):
+        # Tries to find a plausable interface for mocking purposes
+        self.deviceData['senders'].append(senderId)
+        interfaces = netifaces.interfaces()
+        try:
+            return interfaces[1]
+        except IndexException:
+            return interfaces[0]
+
     def registerSender(self, senderId, flowId):
         # Register sender
         self.deviceData['senders'].append(senderId)
-        senderData = {"id": senderId, "label": "example mock sender", "description": "A pretend sender used as part of the NMOS IS-04/05 reference implementation.", "tags": {}, "flow_id": flowId, "transport": "urn:x-nmos:transport:rtp", "device_id": self.deviceId, "manifest_href": "", "max_api_version": "v1.2"}
+        interface = self.getInterface()
+        senderData = {"id": senderId, "label": "example mock sender", "description": "A pretend sender used as part of the NMOS IS-04/05 reference implementation.", "tags": {}, "flow_id": flowId, "transport": "urn:x-nmos:transport:rtp", "device_id": self.deviceId, "manifest_href": "", "interface_bindings": [interface], "max_api_version": "v1.2"}
         self.senders[senderId] = senderData
         self.facade.addResource("sender",senderId,senderData)
         self.updateSender(senderId)
