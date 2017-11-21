@@ -113,7 +113,6 @@ controls": [], "max_api_version" : "v1.2" }
 
     def getInterface(self):
         # Tries to find a plausable interface for mocking purposes
-        self.deviceData['senders'].append(senderId)
         interfaces = netifaces.interfaces()
         try:
             return interfaces[1]
