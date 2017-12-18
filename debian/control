@@ -7,6 +7,7 @@ Standards-Version: 3.9.7
 
 Package: python-connectionmanagement
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-nmoscommon, python-netifaces
+Depends: ${misc:Depends}, ${python:Depends}, python-netifaces
+Recommends: python-nmoscommon
 Description: Connection Management API implementation
  Implements AMWA NMOS IS-05
