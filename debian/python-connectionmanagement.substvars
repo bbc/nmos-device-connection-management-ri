@@ -1,0 +1,6 @@
+misc:Recommends=apache2 (>= 2.4.18~) | httpd
+python:Versions=2.7
+python:Provides=python2.7-connectionmanagement
+python:Depends=python (>= 2.7), python (<< 2.8), python:any (>= 2.6.6-7~), python:any
+misc:Depends=init-system-helpers (>= 1.18~), lsb-base (>= 4.1+Debian11ubuntu7)
+misc:Pre-Depends=
