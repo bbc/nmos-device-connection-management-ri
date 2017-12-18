@@ -33,24 +33,11 @@ class ConnectionManagementService:
 
     def __init__(self, logger=None):
         self.running = False
-        self.foundFacade = False
-        try:
-            # Try and run with internal IP Studio facade
-            from ipppython.ipplogger import IppLogger
-            self.logger = IppLogger("conmanage")
-            from ipppython.facade import Facade
-            self.facade = Facade("{}/{}".format(QUERY_APINAME, QUERY_APIVERSION), address="ipc:///tmp/ips-nodefacade", logger=self.logger)
-            self.logger.writeInfo("Using facade")
-            self.foundFacade = True
-        except ImportError:
-            # Use open source NMOS facade instead
-            from nmoscommon.logger import Logger as IppLogger
-            from nmoscommon.facade import Facade
-            if logger is None:
-                self.logger = IppLogger("conmanage")
-                self.logger.writeWarning("Could not find ipppython facade")
-            self.facade = Facade("{}/{}".format(QUERY_APINAME, QUERY_APIVERSION), address="ipc:///tmp/nmos-nodefacade", logger=self.logger)
-            self.foundFacade = True
+        from nmoscommon.logger import Logger
+        from nmoscommon.facade import Facade
+        self.logger = Logger("conmanage")
+        self.logger.writeWarning("Could not find ipppython facade")
+        self.facade = Facade("{}/{}".format(QUERY_APINAME, QUERY_APIVERSION), address="ipc:///tmp/ips-nodefacade", logger=self.logger)
         self.logger.writeDebug("Running Connection Management Service")
         self.httpServer = HttpServer(ConnectionManagementAPI, WS_PORT,
                                      '0.0.0.0', api_args=[self.logger])
@@ -75,8 +62,7 @@ class ConnectionManagementService:
         self.logger.writeDebug("Running on port: {}"
                                .format(self.httpServer.port))
 
-        if self.foundFacade:
-            self.facade.register_service("http://127.0.0.1:{}".format(self.httpServer.port), DEVICE_ROOT[1:])
+        self.facade.register_service("http://127.0.0.1:{}".format(self.httpServer.port), DEVICE_ROOT[1:])
         try:
             from nmosconnectiondriver.httpIpstudioDriver import httpIpstudioDriver
             self.logger.writeInfo("Using ipstudio driver")
@@ -101,11 +87,10 @@ class ConnectionManagementService:
         itercount = 0
         while self.running:
             gevent.sleep(1)
-            if self.foundFacade:
-                itercount += 1
-                if itercount == 5:
-                    self.facade.heartbeat_service()
-                    itercount = 0
+            itercount += 1
+            if itercount == 5:
+                self.facade.heartbeat_service()
+                itercount = 0
         self._cleanup()
         
     def _cleanup(self):
