@@ -15,7 +15,7 @@
 import time
 from abstractDevice import StagedLockedException
 from sdpParser import SdpParser
-from exceptions import SdpParseError
+from cmExceptions import SdpParseError
 
 
 class SdpManager():

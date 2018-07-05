@@ -20,6 +20,7 @@ import re
 
 __tp__ = 'transport_params'
 
+
 class AbstractDevice:
     __metaclass__ = ABCMeta
 
@@ -50,9 +51,11 @@ class AbstractDevice:
         self.unLock()
         if self.callback is not None:
             try:
+                self.logger.writeDebug("Activation suceeded")
                 self.callback()
             except:
                 """Something went wrong, revert to old params"""
+                self.logger.writeWarning("Activation failed")
                 self.active = copy.deepcopy(oldParams)
                 raise
 

@@ -14,7 +14,7 @@
 
 import re
 from collections import namedtuple
-from exceptions import SdpParseError
+from cmExceptions import SdpParseError
 
 
 ConnectionLine = namedtuple("ConnectionLine", "ntype, atype, addr, groupsize, ttl")
