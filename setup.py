@@ -49,7 +49,8 @@ packages_required = [
     "flask",
     "jsonschema",
     "gevent",
-    "mediatimestamp"
+    "mediatimestamp",
+    "requests"
 ]
 
 setup(name = "nmosconnection",
