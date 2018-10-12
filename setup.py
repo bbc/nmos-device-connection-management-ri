@@ -48,7 +48,8 @@ packages_required = [
     "netifaces",
     "flask",
     "jsonschema",
-    "gevent"
+    "gevent",
+    "mediatimestamp"
 ]
 
 setup(name = "nmosconnection",

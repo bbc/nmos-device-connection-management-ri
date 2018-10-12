@@ -16,7 +16,7 @@ import os
 import unittest
 import time
 import json
-from ipppython import ipptimestamp
+from mediatimestamp import Timestamp, TimeOffset
 from activator import Activator
 from fieldException import FieldException
 from jsonschema import validate, ValidationError
@@ -129,7 +129,7 @@ class TestActivatorModule(unittest.TestCase):
         currentTime = self.dut._getCurrentTime()
         returned = testFunc(testDict)
         self.verify_against_schema(returned[1])
-        returnedTime = ipptimestamp.IppTimestamp.from_sec_nsec(returned[1]['activation_time'])
+        returnedTime = Timestamp.from_sec_nsec(returned[1]['activation_time'])
         self.assertAlmostEqual(float(currentTime.to_sec_frac()),
                                float(returnedTime.to_sec_frac()), 2)
         self.assertEqual(returned[1]['requested_time'], None)
@@ -145,7 +145,7 @@ class TestActivatorModule(unittest.TestCase):
         currentTime = self.dut._getCurrentTime()
         returned = testFunc(testDict)
         self.verify_against_schema(returned[1])
-        returnedTime = ipptimestamp.IppTimestamp.from_sec_nsec(returned[1]['activation_time'])
+        returnedTime = Timestamp.from_sec_nsec(returned[1]['activation_time'])
         self.assertAlmostEqual(float(currentTime.to_sec_frac()),
                                float(returnedTime.to_sec_frac()), 2)
         self.assertEqual(returned[1]['requested_time'], None)
@@ -224,13 +224,13 @@ class TestActivatorModule(unittest.TestCase):
         myTime = time.time() + offset
         secs = int(myTime)
         nanos = int((myTime - secs) * 1e9)
-        ippTime = ipptimestamp.IppTimestamp.from_utc(secs, nanos)
+        ippTime = Timestamp.from_utc(secs, nanos)
         # monkey patch in test function
         self.dut._scheduleActivation = self.mockCallback
         ret = testFunc(str(ippTime))
         self.verify_against_schema(ret[1])
         mode = ret[1]['mode']
-        sched = ipptimestamp.IppTimestamp.from_sec_nsec(
+        sched = Timestamp.from_sec_nsec(
             ret[1]['activation_time'])
         self.verify_against_schema(ret[1])
         self.assertEqual(202, ret[0])
@@ -258,8 +258,8 @@ class TestActivatorModule(unittest.TestCase):
         utc = time.time() + 2.0
         secs = int(utc)
         nanos = (utc - secs) * 1e9
-        ippTime = ipptimestamp.IppTimestamp.from_utc(secs, nanos)
-        sched = ipptimestamp.IppTimestamp.from_sec_nsec(
+        ippTime = Timestamp.from_utc(secs, nanos)
+        sched = Timestamp.from_sec_nsec(
             ret[1]['activation_time'])
         mode = ret[1]['mode']
         code = ret[0]
@@ -287,7 +287,7 @@ class TestActivatorModule(unittest.TestCase):
         """Test setting up a delayed activation -
         this test will block for two seconds"""
         testFunc = self.dut._scheduleRelative
-        testTime = ipptimestamp.IppTimeOffset(1, 0)
+        testTime = TimeOffset(1, 0)
         # monkey patch in test function
         self.api.activateStaged = self.mockApiCallback
         ret = testFunc(testTime)
