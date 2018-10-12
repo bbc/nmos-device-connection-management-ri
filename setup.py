@@ -50,7 +50,8 @@ packages_required = [
     "jsonschema",
     "gevent",
     "mediatimestamp",
-    "requests"
+    "requests",
+    "nmoscommon"
 ]
 
 setup(name = "nmosconnection",
