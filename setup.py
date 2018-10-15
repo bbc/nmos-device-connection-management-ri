@@ -54,7 +54,7 @@ packages_required = [
     "nmoscommon"
 ]
 
-setup(name = "nmosconnection",
+setup(name = "connectionmanagement",
       version = "1.0.0",
       description = "Connection Management API implementation",
       url='https://github.com/bbc/nmos-device-connection-management-ri/',
