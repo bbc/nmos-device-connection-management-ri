@@ -21,7 +21,7 @@ sys.path.append('../')
 from rtpSender import RtpSender
 from jsonschema import validate, ValidationError
 from abstractDevice import StagedLockedException
-from ipppython.ipplogger import IppLogger
+from nmoscommon.logger import Logger
 
 API_WS_PORT = 8856
 SENDER_WS_PORT = 8857
@@ -50,7 +50,7 @@ class TestRtpSenderBackend(unittest.TestCase):
     """Test the RTP sender backend"""
 
     def setUp(self):
-        self.logger = IppLogger("Connection Management Tests")
+        self.logger = Logger("Connection Management Tests")
         self.dut = RtpSender(self.logger, 2)
         self.dut.supportedSourceIPs = ['127.0.0.1', "::1", "192.168.1.1", "192.168.0.1"]
         self.dut.schemaPath = "../share/ipp-connectionmanagement/schemas/"

@@ -1,7 +1,0 @@
-#!/usr/bin/make -f
-
-%:
-	dh $@ --with python2,apache2,systemd --buildsystem=python_distutils
-
-override_dh_installinit:
-	dh_installinit --noscripts

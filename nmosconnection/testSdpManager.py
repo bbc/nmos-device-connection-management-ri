@@ -15,8 +15,8 @@
 import unittest
 import copy
 from sdpManager import SdpManager
-from ipppython.webapi import WebAPI, basic_route
-from ipppython.ipplogger import IppLogger
+from nmoscommon.webapi import WebAPI, basic_route
+from nmoscommon.logger import Logger
 from flask import Response
 
 TESTING_HTTP_PORT = 8080
@@ -67,7 +67,7 @@ class MockSenderAPI():
 class TestSdpManager(unittest.TestCase):
 
     def setUp(self):
-        self.logger = IppLogger("Connection Management Tests")
+        self.logger = Logger("Connection Management Tests")
         self.interface = MockSenderAPI()
         self.dut = SdpManager(self.logger, self.interface)
         self.callbackCalled = False

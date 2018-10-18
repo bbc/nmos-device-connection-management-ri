@@ -16,7 +16,7 @@ import json
 import unittest
 import os
 import copy
-from ipppython.ipplogger import IppLogger
+from nmoscommon.logger import Logger
 from rtpReceiver import RtpReceiver
 from fieldException import FieldException
 from jsonschema import ValidationError
@@ -35,7 +35,7 @@ class TestRtpReceiverBackend(unittest.TestCase):
     """Test the RTP receiver backend"""
 
     def setUp(self):
-        self.logger = IppLogger("Connection Management Tests")
+        self.logger = Logger("Connection Management Tests")
         self.dut = RtpReceiver(
             self.logger,
             self.mockTransportManager,

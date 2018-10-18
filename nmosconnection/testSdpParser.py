@@ -14,7 +14,7 @@
 
 import unittest
 from sdpParser import SdpParser
-from ipppython.ipplogger import IppLogger
+from nmoscommon.logger import Logger
 
 TESTING_HTTP_PORT = 8080
 
@@ -22,7 +22,7 @@ TESTING_HTTP_PORT = 8080
 class TestSdpParser(unittest.TestCase):
 
     def setUp(self):
-        self.logger = IppLogger("Connection Management Tests")
+        self.logger = Logger("Connection Management Tests")
         self.dut = SdpParser(self.logger)
 
     def checkSdpResult(self, sources):

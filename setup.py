@@ -15,38 +15,8 @@
 # limitations under the License.
 
 
-from distutils.core import setup
-from distutils.version import LooseVersion
+from setuptools import setup
 import os
-import sys
-
-
-def check_packages(packages):
-    failure = False
-    for python_package, debian_package in packages:
-        try:
-            __import__(python_package)
-        except ImportError as err:
-            failure = True
-            print "Cannot find", python_package,
-            print "you need to install :", debian_package
-
-    return not failure
-
-
-def check_dependencies(packages):
-    failure = False
-    for python_package, dependency_filename, dependency_url in packages:
-        try:
-            __import__(python_package)
-        except ImportError as err:
-            failure = True
-            print
-            print "Cannot find", python_package,
-            print "you need to install :", dependency_filename
-            print "... originally retrieved from", dependency_url
-
-    return not failure
 
 
 def is_package(path):
@@ -72,45 +42,32 @@ def find_packages(path, base=""):
 
 
 packages = find_packages(".")
-
 package_names = packages.keys()
-print package_names
 
 packages_required = [
-                    ]
+    "netifaces",
+    "flask",
+    "jsonschema",
+    "gevent",
+    "mediatimestamp",
+    "requests",
+    "nmoscommon"
+]
 
-deps_required = [
-                ]
-
-if sys.argv[1] != "sdist" and sys.argv[1] != "clean":
-    # print sys.argv
-    # import os
-    # print os.environ
-    have_packages = check_packages(packages_required)
-    have_dependencies = check_dependencies(deps_required)
-
-    if not(have_packages and have_dependencies):
-        print
-        print "Cannot proceed without the packages listed installed"
-        print "The debian packages can be installed together"
-        print "The dependencies must be installed in that order"
-        sys.exit(1)
-
-
-setup(name = "nmosconnection",
+setup(name = "connectionmanagement",
       version = "1.0.0",
       description = "Connection Management API implementation",
-      url='https://github.com/bbc/nmos-connection-management-ri/',
+      url='https://github.com/bbc/nmos-device-connection-management-ri/',
       author='BBC R&D',
       author_email='peter.brightwell@bbc.co.uk',
       license='Apache 2',
       packages = package_names,
       package_dir = packages,
+      install_requires = packages_required,
       package_data={'': ['templates/*']},
-      scripts = [
-#                  'bin/connectionmanagement'
-                ],
+      scripts = [],
       data_files=[
+        ('/usr/bin', ['bin/connectionmanagement'])
                  ],
       long_description = """
 Implementation of NMOS connection management API

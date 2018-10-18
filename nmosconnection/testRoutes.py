@@ -15,10 +15,10 @@
 import unittest
 import requests
 import os
-from ipppython.ipplogger import IppLogger
+from nmoscommon.logger import Logger
 import json
 from api import ConnectionManagementAPI
-from ipppython.httpserver import HttpServer
+from nmoscommon.httpserver import HttpServer
 from jsonschema import ValidationError, validate
 import uuid
 from abstractDevice import StagedLockedException
@@ -183,7 +183,7 @@ class TestRoutes(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Runs before each test"""
-        cls.logger = IppLogger("conmanage")
+        cls.logger = Logger("conmanage")
         cls.mockApi = MockSenderAPI()
         cls.mockReceiver = MockSenderAPI()
         cls.activator = MockActivator()
