@@ -76,7 +76,7 @@ dsc: deb_dist $(DEBIANOVERRIDES)
 
 deb: source deb_dist $(DEBIANOVERRIDES)
 	DEB_BUILD_OPTIONS=nocheck
-	cd $(DEBIANDIR)/..;debuild -uc -us
+	cd $(DEBIANDIR)/..;debuild -e PYBUILD_DISABLE=test -uc -us
 	cp $(topbuilddir)/deb_dist/python*$(DEBNAME)_$(DEBVERSION)-1*.deb $(topbuilddir)/dist
 
 # START OF RPM SPEC RULES
