@@ -23,7 +23,7 @@ import signal
 import gevent
 
 from nmoscommon.httpserver import HttpServer
-from api import ConnectionManagementAPI, QUERY_APINAME, QUERY_APIVERSION, DEVICE_ROOT
+from api import ConnectionManagementAPI, CONN_APINAME, CONN_APIVERSIONS, DEVICE_ROOT
 from nmosDriver import NmosDriver
 from constants import WS_PORT
 
@@ -36,7 +36,7 @@ class ConnectionManagementService:
         from nmoscommon.facade import Facade
         self.logger = Logger("conmanage")
         self.logger.writeWarning("Could not find ipppython facade")
-        self.facade = Facade("{}/{}".format(QUERY_APINAME, QUERY_APIVERSION),
+        self.facade = Facade("{}/{}".format(CONN_APINAME, CONN_APIVERSIONS[-1]),
                              address="ipc:///tmp/ips-nodefacade", logger=self.logger)
         self.logger.writeDebug("Running Connection Management Service")
         self.httpServer = HttpServer(ConnectionManagementAPI, WS_PORT,

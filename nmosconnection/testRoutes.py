@@ -42,12 +42,12 @@ SENDER_EXAMPLES = [
     "v1.0-sender-patch-relative.json"
 ]
 
-QUERY_APINAMESPACE = "x-nmos"
-QUERY_APINAME = "connection"
-QUERY_APIVERSION = "v1.0"
+CONN_APINAMESPACE = "x-nmos"
+CONN_APINAME = "connection"
+CONN_APIVERSION = "v1.0"
 
 
-DEVICE_ROOT = QUERY_APINAMESPACE+'/'+QUERY_APINAME+'/'+QUERY_APIVERSION+'/'
+DEVICE_ROOT = CONN_APINAMESPACE+'/'+CONN_APINAME+'/'+CONN_APIVERSION+'/'
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -103,7 +103,7 @@ class MockSdpParser():
 
     def getLastRequest(self):
         return {"lastfile": "yes"}
-    
+
     def getStagedRequest(self):
         return {"stagedfile": "yes"}
 
@@ -147,8 +147,8 @@ class MockSenderAPI():
         self.senderId = id
 
     def setMasterEnable(self, state):
-        self.masterEnable = state    
-    
+        self.masterEnable = state
+
     def getConstraints(self):
         return json.dumps({'constraints': 'constraints'})
 
@@ -203,7 +203,7 @@ class TestRoutes(unittest.TestCase):
         cls.dut.addReceiver(cls.mockReceiver, cls.receiverUUID)
 
         cls.baseUrl = "http://127.0.0.1:" + str(SENDER_WS_PORT)
-        cls.deviceRoot = cls.baseUrl + '/' + DEVICE_ROOT
+        cls.deviceRoot = cls.baseUrl + '/' + DEVICE_ROOT + CONN_APIVERSION + '/'
         cls.senderRoot = cls.deviceRoot + "single/senders/" + cls.senderUUID
         cls.receiverRoot = cls.deviceRoot + "single/receivers/" + cls.receiverUUID
         cls.maxDiff = None
@@ -464,7 +464,7 @@ class TestRoutes(unittest.TestCase):
                            headers=HEADERS, data=json.dumps(data))
         self.assertTrue(self.activator.updated)
         self.assertEqual(r.status_code, 200)
-        
+
     """Tests for /active"""
 
     def test_active_file_get(self):
