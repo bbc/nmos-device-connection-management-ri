@@ -203,7 +203,7 @@ class TestRoutes(unittest.TestCase):
         cls.dut.addReceiver(cls.mockReceiver, cls.receiverUUID)
 
         cls.baseUrl = "http://127.0.0.1:" + str(SENDER_WS_PORT)
-        cls.deviceRoot = cls.baseUrl + '/' + DEVICE_ROOT + CONN_APIVERSION + '/'
+        cls.deviceRoot = cls.baseUrl + '/' + DEVICE_ROOT
         cls.senderRoot = cls.deviceRoot + "single/senders/" + cls.senderUUID
         cls.receiverRoot = cls.deviceRoot + "single/receivers/" + cls.receiverUUID
         cls.maxDiff = None
@@ -257,9 +257,9 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_correct_version(self):
-        """Checks that the API is served as version 1.0"""
+        """Checks that the API is served as version 1.0 and 1.1"""
         r = requests.get(self.baseUrl + "/x-nmos/connection/", headers=HEADERS)
-        expected = ["v1.0/"]
+        expected = ["v1.0/", "v1.1/"]
         actual = json.loads(r.text)
         self.assertEqual(expected, actual)
 
