@@ -39,18 +39,18 @@ class MockApi():
 
     def unLock(self):
         self.locked = False
-    
+
 class MockTimer():
     """A mock timer"""
     def __init__(self):
         self.cancelled = False
-        
+
     def cancel(self):
         self.cancelled = True
 
 class TestActivatorModule(unittest.TestCase):
     """Test the Activator Module"""
-    
+
     def setUp(self):
         self.api = MockApi(self.mockApiCallback)
         self.dut = Activator([self.api])
@@ -214,7 +214,7 @@ class TestActivatorModule(unittest.TestCase):
         testFunc = self.dut._getCurrentTime
         expected = time.time()
         response = testFunc().to_utc()
-        actual = float(str(response[0]) + "." + str(response[1]))
+        actual = float(str(response[0]) + "." + str(response[1]).zfill(9))
         self.assertAlmostEqual(actual, expected, 0)
 
     def test_schedule_absolute(self):
