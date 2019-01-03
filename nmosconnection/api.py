@@ -37,6 +37,13 @@ SINGLE_ROOT = "single/"
 BULK_ROOT = "bulk/"
 
 
+TRANSPORT_URN = "urn:x-nmos:transport:"
+VALID_TRANSPORTS = {
+    "v1.0": ["rtp"],
+    "v1.1": ["rtp", "mqtt", "websocket"]
+}
+
+
 class ConnectionManagementAPI(WebAPI):
 
     def __init__(self, logger):
@@ -78,11 +85,17 @@ class ConnectionManagementAPI(WebAPI):
         self.transportManagers[uuid] = receiver.transportManagers[0]
         return self.activators[uuid]
 
-    def getDevice(self, sr, device):
+    def getDevice(self, api_version, sr, device):
         if sr == "receivers":
-            return self.receivers[device]
+            if self.receivers[device].getTransportType() not in VALID_TRANSPORTS[api_version]:
+                raise LookupError
+            else:
+                return self.receivers[device]
         elif sr == "senders":
-            return self.senders[device]
+            if self.senders[device].getTransportType() not in VALID_TRANSPORTS[api_version]:
+                raise LookupError
+            else:
+                return self.senders[device]
         else:
             raise LookupError
 
@@ -141,9 +154,17 @@ class ConnectionManagementAPI(WebAPI):
         if api_version not in CONN_APIVERSIONS:
             abort(404)
         if sr == "receivers":
-            keys = list(self.receivers.keys())
+            keys = list()
+            for receiver_id in self.receivers.keys():
+                if self.receivers[receiver_id].getTransportType() not in VALID_TRANSPORTS[api_version]:
+                    continue
+                keys.append(receiver_id)
         elif sr == "senders":
-            keys = list(self.senders.keys())
+            keys = list()
+            for sender_id in self.senders.keys():
+                if self.senders[sender_id].getTransportType() not in VALID_TRANSPORTS[api_version]:
+                    continue
+                keys.append(sender_id)
         else:
             return 404
         toReturn = []
@@ -156,7 +177,7 @@ class ConnectionManagementAPI(WebAPI):
         if api_version not in CONN_APIVERSIONS:
             abort(404)
         try:
-            self.getDevice(sr, device)
+            self.getDevice(api_version, sr, device)
         except:
             abort(404)
         obj = ['constraints/', 'staged/', 'active/']
@@ -171,7 +192,7 @@ class ConnectionManagementAPI(WebAPI):
         if api_version not in CONN_APIVERSIONS:
             abort(404)
         try:
-            device = self.getDevice(sr, device)
+            device = self.getDevice(api_version, sr, device)
         except:
             abort(404)
         return device.getConstraints()
@@ -182,7 +203,7 @@ class ConnectionManagementAPI(WebAPI):
         if api_version not in CONN_APIVERSIONS:
             abort(404)
         try:
-            deviceObj = self.getDevice(sr, device)
+            deviceObj = self.getDevice(api_version, sr, device)
         except:
             abort(404)
         toReturn = deviceObj.stagedToJson()
@@ -204,7 +225,7 @@ class ConnectionManagementAPI(WebAPI):
         # First check the sender/receiver exists
         toReturn = {}
         try:
-            deviceObj = self.getDevice(sr, device)
+            deviceObj = self.getDevice(api_version, sr, device)
         except:
             return (404, {})
         try:
@@ -329,7 +350,7 @@ class ConnectionManagementAPI(WebAPI):
         if api_version not in CONN_APIVERSIONS:
             abort(404)
         try:
-            deviceObj = self.getDevice(sr, device)
+            deviceObj = self.getDevice(api_version, sr, device)
         except:
             abort(404)
         toReturn = {}
@@ -345,7 +366,7 @@ class ConnectionManagementAPI(WebAPI):
         if api_version not in CONN_APIVERSIONS:
             abort(404)
         try:
-            device = self.getDevice('senders', device)
+            device = self.getDevice(api_version, 'senders', device)
         except:
             abort(404)
         resp = Response(device.transportFile)
@@ -361,11 +382,11 @@ class ConnectionManagementAPI(WebAPI):
             abort(404)
 
         try:
-            deviceObj = self.getDevice(sr, device)
+            deviceObj = self.getDevice(api_version, sr, device)
         except:
             abort(404)
         toReturn = {}
-        toReturn = json.dumps(deviceObj.getTransportType())
+        toReturn = json.dumps(TRANSPORT_URN + deviceObj.getTransportType())
 
         return toReturn
 

@@ -176,6 +176,9 @@ class MockSenderAPI():
     def unLock(self):
         self.locked = False
 
+    def getTransportType(self):
+        return "rtp"
+
 
 class TestRoutes(unittest.TestCase):
     """Test the routes class"""

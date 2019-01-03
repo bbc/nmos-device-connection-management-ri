@@ -234,7 +234,7 @@ class RtpReceiver(AbstractDevice):
         return self.active['sender_id']
 
     def getTransportType(self):
-        return "urn:x-nmos:transport:rtp"
+        return "rtp"
 
     def _setTp(self, value, field, leg):
         q = [{}, {}]
