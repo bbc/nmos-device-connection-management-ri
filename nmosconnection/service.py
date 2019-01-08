@@ -62,7 +62,8 @@ class ConnectionManagementService:
         self.logger.writeDebug("Running on port: {}"
                                .format(self.httpServer.port))
 
-        self.facade.register_service("http://127.0.0.1:{}".format(self.httpServer.port), DEVICE_ROOT[1:])
+        self.facade.register_service("http://127.0.0.1:{}".format(self.httpServer.port),
+                                     "{}{}/".format(DEVICE_ROOT[1:], CONN_APIVERSIONS[-1]))
         try:
             from nmosconnectiondriver.httpIpstudioDriver import httpIpstudioDriver
             self.logger.writeInfo("Using ipstudio driver")
