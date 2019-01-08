@@ -176,5 +176,9 @@ class AbstractDevice:
     def getParamsSchema(self):
         pass
 
+    @abstractmethod
+    def getTransportType(self):
+        pass
+
 class StagedLockedException(Exception):
     pass

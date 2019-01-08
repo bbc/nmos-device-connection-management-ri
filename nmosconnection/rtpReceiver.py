@@ -232,7 +232,10 @@ class RtpReceiver(AbstractDevice):
 
     def getActiveSenderID(self):
         return self.active['sender_id']
-    
+
+    def getTransportType(self):
+        return "rtp"
+
     def _setTp(self, value, field, leg):
         q = [{}, {}]
         q[leg][field] = value

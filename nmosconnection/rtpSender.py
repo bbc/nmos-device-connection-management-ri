@@ -264,6 +264,9 @@ class RtpSender(AbstractDevice):
     def getActiveTransportFileURL(self):
         return self.transportFile
 
+    def getTransportType(self):
+        return "rtp"
+
     def _setTp(self, value, field, leg):
         q = {__tp__: [{}, {}]}
         q[__tp__][leg][field] = value

@@ -42,12 +42,12 @@ SENDER_EXAMPLES = [
     "v1.0-sender-patch-relative.json"
 ]
 
-QUERY_APINAMESPACE = "x-nmos"
-QUERY_APINAME = "connection"
-QUERY_APIVERSION = "v1.0"
+CONN_APINAMESPACE = "x-nmos"
+CONN_APINAME = "connection"
+CONN_APIVERSION = "v1.0"
 
 
-DEVICE_ROOT = QUERY_APINAMESPACE+'/'+QUERY_APINAME+'/'+QUERY_APIVERSION+'/'
+DEVICE_ROOT = CONN_APINAMESPACE+'/'+CONN_APINAME+'/'+CONN_APIVERSION+'/'
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -103,7 +103,7 @@ class MockSdpParser():
 
     def getLastRequest(self):
         return {"lastfile": "yes"}
-    
+
     def getStagedRequest(self):
         return {"stagedfile": "yes"}
 
@@ -147,8 +147,8 @@ class MockSenderAPI():
         self.senderId = id
 
     def setMasterEnable(self, state):
-        self.masterEnable = state    
-    
+        self.masterEnable = state
+
     def getConstraints(self):
         return json.dumps({'constraints': 'constraints'})
 
@@ -175,6 +175,9 @@ class MockSenderAPI():
 
     def unLock(self):
         self.locked = False
+
+    def getTransportType(self):
+        return "rtp"
 
 
 class TestRoutes(unittest.TestCase):
@@ -257,9 +260,9 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_correct_version(self):
-        """Checks that the API is served as version 1.0"""
+        """Checks that the API is served as version 1.0 and 1.1"""
         r = requests.get(self.baseUrl + "/x-nmos/connection/", headers=HEADERS)
-        expected = ["v1.0/"]
+        expected = ["v1.0/", "v1.1/"]
         actual = json.loads(r.text)
         self.assertEqual(expected, actual)
 
@@ -464,7 +467,7 @@ class TestRoutes(unittest.TestCase):
                            headers=HEADERS, data=json.dumps(data))
         self.assertTrue(self.activator.updated)
         self.assertEqual(r.status_code, 200)
-        
+
     """Tests for /active"""
 
     def test_active_file_get(self):

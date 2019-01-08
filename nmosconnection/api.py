@@ -27,14 +27,21 @@ from constants import SCHEMA_LOCAL
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-QUERY_APINAMESPACE = "x-nmos"
-QUERY_APINAME = "connection"
-QUERY_APIVERSION = "v1.0"
+CONN_APINAMESPACE = "x-nmos"
+CONN_APINAME = "connection"
+CONN_APIVERSIONS = ["v1.0", "v1.1"]
 
 
-DEVICE_ROOT = '/' + QUERY_APINAMESPACE +'/'+QUERY_APINAME+'/'+QUERY_APIVERSION+'/'
-SINGLE_ROOT = DEVICE_ROOT + "single/"
-BULK_ROOT = DEVICE_ROOT + "bulk/"
+DEVICE_ROOT = '/' + CONN_APINAMESPACE + '/' + CONN_APINAME + '/'
+SINGLE_ROOT = "single/"
+BULK_ROOT = "bulk/"
+
+
+TRANSPORT_URN = "urn:x-nmos:transport:"
+VALID_TRANSPORTS = {
+    "v1.0": ["rtp"],
+    "v1.1": ["rtp", "mqtt", "websocket"]
+}
 
 
 class ConnectionManagementAPI(WebAPI):
@@ -47,7 +54,7 @@ class ConnectionManagementAPI(WebAPI):
         self.activators = {}
         self.transportManagers = {}
         self.schemaPath = SCHEMA_LOCAL
-        self.useValidation = True # Used for unit testing
+        self.useValidation = True  # Used for unit testing
 
     def addSender(self, sender, uuid):
         if uuid in self.senders:
@@ -69,7 +76,7 @@ class ConnectionManagementAPI(WebAPI):
                 receiver,
                 receiver.transportManagers[0]
             ])
-        else: 
+        else:
             self.activators[uuid] = Activator([
                 receiver,
                 receiver.transportManagers[0],
@@ -78,11 +85,17 @@ class ConnectionManagementAPI(WebAPI):
         self.transportManagers[uuid] = receiver.transportManagers[0]
         return self.activators[uuid]
 
-    def getDevice(self, sr, device):
+    def getDevice(self, api_version, sr, device):
         if sr == "receivers":
-            return self.receivers[device]
+            if self.receivers[device].getTransportType() not in VALID_TRANSPORTS[api_version]:
+                raise LookupError
+            else:
+                return self.receivers[device]
         elif sr == "senders":
-            return self.senders[device]
+            if self.senders[device].getTransportType() not in VALID_TRANSPORTS[api_version]:
+                raise LookupError
+            else:
+                return self.senders[device]
         else:
             raise LookupError
 
@@ -112,32 +125,46 @@ class ConnectionManagementAPI(WebAPI):
 
     @route('/')
     def __index(self):
-        return (200, [QUERY_APINAMESPACE+"/"])
+        return (200, [CONN_APINAMESPACE+"/"])
 
-    @route('/'+QUERY_APINAMESPACE+"/")
+    @route('/'+CONN_APINAMESPACE+"/")
     def __namespaceindex(self):
-        return (200, [QUERY_APINAME+"/"])
+        return (200, [CONN_APINAME+"/"])
 
-    @route('/'+QUERY_APINAMESPACE+'/'+QUERY_APINAME+'/')
+    @route(DEVICE_ROOT)
     def __nameindex(self):
-        return (200, ["v1.0/"])
+        return (200, [api_version + "/" for api_version in CONN_APIVERSIONS])
 
-    @route('/'+QUERY_APINAMESPACE+'/'+QUERY_APINAME+'/'+QUERY_APIVERSION+'/')
-    def __versionindex(self):
+    @route(DEVICE_ROOT + "<api_version>/")
+    def __versionindex(self, api_version):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         obj = ["bulk/", "single/"]
         return (200, obj)
 
-    @route(SINGLE_ROOT)
-    def __singleRoot(self):
+    @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT)
+    def __singleRoot(self, api_version):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         obj = ["senders/", "receivers/"]
         return (200, obj)
 
-    @route(SINGLE_ROOT + '<sr>/')
-    def __deviceroot(self, sr):
+    @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + '<sr>/')
+    def __deviceroot(self, api_version, sr):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         if sr == "receivers":
-            keys = list(self.receivers.keys())
+            keys = list()
+            for receiver_id in self.receivers.keys():
+                if self.receivers[receiver_id].getTransportType() not in VALID_TRANSPORTS[api_version]:
+                    continue
+                keys.append(receiver_id)
         elif sr == "senders":
-            keys = list(self.senders.keys())
+            keys = list()
+            for sender_id in self.senders.keys():
+                if self.senders[sender_id].getTransportType() not in VALID_TRANSPORTS[api_version]:
+                    continue
+                keys.append(sender_id)
         else:
             return 404
         toReturn = []
@@ -145,30 +172,38 @@ class ConnectionManagementAPI(WebAPI):
             toReturn.append(key + "/")
         return toReturn
 
-    @route(SINGLE_ROOT + '<sr>/<device>/', methods=['GET'])
-    def __deviceindex(self, device, sr):
+    @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + '<sr>/<device>/', methods=['GET'])
+    def __deviceindex(self, api_version, device, sr):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         try:
-            self.getDevice(sr, device)
+            self.getDevice(api_version, sr, device)
         except:
             abort(404)
         obj = ['constraints/', 'staged/', 'active/']
         if sr == 'senders':
             obj.append('transportfile/')
+        if api_version != "v1.0":
+            obj.append('transporttype/')
         return(200, obj)
 
-    @route(SINGLE_ROOT + '<sr>/<device>/constraints/', methods=['GET'])
-    def __constraints(self, sr, device):
+    @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + '<sr>/<device>/constraints/', methods=['GET'])
+    def __constraints(self, api_version, sr, device):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         try:
-            device = self.getDevice(sr, device)
+            device = self.getDevice(api_version, sr, device)
         except:
             abort(404)
         return device.getConstraints()
 
-    @route(SINGLE_ROOT + '<sr>/<device>/staged/',
+    @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + '<sr>/<device>/staged/',
            methods=['GET'])
-    def __staged_get(self, sr, device):
+    def __staged_get(self, api_version, sr, device):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         try:
-            deviceObj = self.getDevice(sr, device)
+            deviceObj = self.getDevice(api_version, sr, device)
         except:
             abort(404)
         toReturn = deviceObj.stagedToJson()
@@ -178,17 +213,19 @@ class ConnectionManagementAPI(WebAPI):
             toReturn['transport_file'] = transportManager.getStagedRequest()
         return toReturn
 
-    @route(SINGLE_ROOT + '<sr>/<device>/staged',
+    @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + '<sr>/<device>/staged',
            methods=['PATCH'])
-    def single_staged_patch(self, sr, device):
-        obj = request.get_json()        
-        return self.staged_patch(sr, device, obj)
-    
-    def staged_patch(self, sr, device, obj):
+    def single_staged_patch(self, api_version, sr, device):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
+        obj = request.get_json()
+        return self.staged_patch(api_version, sr, device, obj)
+
+    def staged_patch(self, api_version, sr, device, obj):
         # First check the sender/receiver exists
         toReturn = {}
         try:
-            deviceObj = self.getDevice(sr, device)
+            deviceObj = self.getDevice(api_version, sr, device)
         except:
             return (404, {})
         try:
@@ -227,7 +264,7 @@ class ConnectionManagementAPI(WebAPI):
                 return activationRet
             toReturn = self.assembleResponse(sr, deviceObj, device, activationRet)
         else:
-            toReturn = (200, self.__staged_get(sr, device))
+            toReturn = (200, self.__staged_get(api_version, sr, device))
         return toReturn
 
     def validateAgainstSchema(self, request, schemaFile):
@@ -255,7 +292,7 @@ class ConnectionManagementAPI(WebAPI):
                 return (500, self.errorResponse(500, "Could not find transport manager"))
             toReturn['transport_file'] = transportManager.getStagedRequest()
         return (activationRet[0], toReturn)
-    
+
     def applyReceiverId(self, id, device):
         try:
             device.setReceiverId(id)
@@ -283,7 +320,7 @@ class ConnectionManagementAPI(WebAPI):
         except StagedLockedException:
             return (423, self.errorResponse(423, "Resource is locked due to a pending activation"))
         return (200, {})
-        
+
     def applyTransportFile(self, request, device):
         transportManager = self.getTransportManager(device)
         try:
@@ -308,10 +345,12 @@ class ConnectionManagementAPI(WebAPI):
             return (500, self.errorResponse(500, str(err)))
         return toReturn
 
-    @route(SINGLE_ROOT + '<sr>/<device>/active/', methods=['GET'])
-    def __activeReceiver(self, sr, device):
+    @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + '<sr>/<device>/active/', methods=['GET'])
+    def __activeReceiver(self, api_version, sr, device):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         try:
-            deviceObj = self.getDevice(sr, device)
+            deviceObj = self.getDevice(api_version, sr, device)
         except:
             abort(404)
         toReturn = {}
@@ -322,27 +361,50 @@ class ConnectionManagementAPI(WebAPI):
             toReturn['transport_file'] = transportManager.getActiveRequest()
         return toReturn
 
-    @basic_route(SINGLE_ROOT + 'senders/<device>/transportfile/')
-    def __transportFileRedirect(self, device):
+    @basic_route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + 'senders/<device>/transportfile/')
+    def __transportFileRedirect(self, api_version, device):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         try:
-            device = self.getDevice('senders', device)
+            device = self.getDevice(api_version, 'senders', device)
         except:
             abort(404)
         resp = Response(device.transportFile)
         resp.headers['content-type'] = 'application/sdp'
         return resp
 
+    @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + '<sr>/<device>/transporttype/', methods=['GET'])
+    def __transportType(self, api_version, sr, device):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
+        if api_version == "v1.0":
+            # This resource doesn't exist before v1.1
+            abort(404)
+
+        try:
+            deviceObj = self.getDevice(api_version, sr, device)
+        except:
+            abort(404)
+        toReturn = {}
+        toReturn = json.dumps(TRANSPORT_URN + deviceObj.getTransportType())
+
+        return toReturn
+
     """Begin bulk API routes"""
 
-    @route(BULK_ROOT)
-    def __bulk_root(self):
+    @route(DEVICE_ROOT + "<api_version>/" + BULK_ROOT)
+    def __bulk_root(self, api_version):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         return ['senders/', 'receivers/']
 
-    @route(BULK_ROOT + '<sr>',
+    @route(DEVICE_ROOT + "<api_version>/" + BULK_ROOT + '<sr>',
            methods=['POST'])
-    def __bulk_senders_staged_patch(self, sr):
+    def __bulk_senders_staged_patch(self, api_version, sr):
         """Process a bulk staging object and sindicate it out to individual
         senders/receivers"""
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         obj = request.get_json()
         statuses = []
         try:
@@ -357,7 +419,7 @@ class ConnectionManagementAPI(WebAPI):
                 except KeyError as err:
                     message = "Failed to find field 'params' in one or more objects"
                     return (400, self.errorResponse(400, message))
-                res = self.staged_patch(sr, id, params)
+                res = self.staged_patch(api_version, sr, id, params)
                 statuses.append({"id": id, "code": res[0]})
         except TypeError as err:
             return (400, {"code": 400, "error": str(err),
@@ -366,8 +428,10 @@ class ConnectionManagementAPI(WebAPI):
 
     # The below is not part of the API - it is used to make the active
     # SDP file available over HTTP to BBC R&D RTP Receivers
-    @basic_route(SINGLE_ROOT + 'receivers/<device>/active/sdp/')
-    def __active_sdp(self, device):
+    @basic_route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + 'receivers/<device>/active/sdp/')
+    def __active_sdp(self, api_version, device):
+        if api_version not in CONN_APIVERSIONS:
+            abort(404)
         try:
             receiver = self.receivers[device]
             manager = receiver.transportManagers[0]
