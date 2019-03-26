@@ -19,8 +19,12 @@ Starts an instance of the HTTP server and loads the API into it.
 Manages a graceful shutdown on SIGINT, SIGTERM
 """
 
-import signal
+
 import gevent
+from gevent import monkey
+monkey.patch_all()
+
+import signal
 
 from nmoscommon.httpserver import HttpServer
 from api import ConnectionManagementAPI, CONN_APINAME, CONN_APIVERSIONS, DEVICE_ROOT

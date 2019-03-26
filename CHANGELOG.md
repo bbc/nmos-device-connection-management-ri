@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.0.1
+- Add missing monkey patch call for gevent, potentially causing freezes
+
 ## 2.0.0
 - Add support for provisional API v1.1
 
