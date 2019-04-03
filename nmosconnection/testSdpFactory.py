@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from __future__ import absolute_import
-
 import unittest
 from mock import MagicMock
-from .sdpFactory import senderFileFactory
+from nmosconnection.sdpFactory import senderFileFactory
 
 
 class TestSdpFactory(unittest.TestCase):

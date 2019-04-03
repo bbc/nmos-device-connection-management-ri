@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-
 import json
 import unittest
 import os
 import copy
 from nmoscommon.logger import Logger
-from .rtpReceiver import RtpReceiver
-from .fieldException import FieldException
+from nmosconnection.rtpReceiver import RtpReceiver
+from nmosconnection.fieldException import FieldException
 from jsonschema import ValidationError
 
 SENDER_WS_PORT = 8857

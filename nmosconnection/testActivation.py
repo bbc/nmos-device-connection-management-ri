@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-
 import os
 import unittest
 import time
 import json
 from mediatimestamp import Timestamp, TimeOffset
-from .activator import Activator
-from .fieldException import FieldException
+from nmosconnection.activator import Activator
+from nmosconnection.fieldException import FieldException
 from jsonschema import validate, ValidationError
 
 __location__ = os.path.realpath(

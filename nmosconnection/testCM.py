@@ -12,17 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
-
 import unittest
 import json
 import os
 import copy
 import sys
 sys.path.append('../')
-from .rtpSender import RtpSender
+from nmosconnection.rtpSender import RtpSender
 from jsonschema import validate, ValidationError
-from .abstractDevice import StagedLockedException
+from nmosconnection.abstractDevice import StagedLockedException
 from nmoscommon.logger import Logger
 
 API_WS_PORT = 8856
