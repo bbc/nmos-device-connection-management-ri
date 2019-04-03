@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from sdpLineParser import parseLine, ConnectionLine, MediaLine, AttributeLine
+from __future__ import absolute_import
+
+from .sdpLineParser import parseLine, ConnectionLine, MediaLine, AttributeLine
 
 
 class SdpParser:

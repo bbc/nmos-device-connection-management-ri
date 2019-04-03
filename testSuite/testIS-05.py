@@ -40,17 +40,17 @@ class TestIS05(unittest.TestCase):
     skipBlocking = False
     skipBulk = False
     ibcOnly = False
-    
+
     @classmethod
     def setUpClass(cls):
         cls.senders = cls.get_senders()
         cls.receivers = cls.get_receivers()
         if len(cls.senders) == 0:
-            print "No senders are configured on the API, the senders part of the API will not be tested"
+            print("No senders are configured on the API, the senders part of the API will not be tested")
             global testSenders
             testSenders = False
         if len(cls.receivers) == 0:
-            print "No receivers are configure on the API, the receivers part of the API will not be tested"
+            print("No receivers are configure on the API, the receivers part of the API will not be tested")
             global testReceivers
             testReceivers = False
 
@@ -435,7 +435,7 @@ class TestIS05(unittest.TestCase):
         self.assertEqual(r.status_code, 200)
         expected = {"mode": None, "requested_time": None, "activation_time": None}
         self.assertEqual(r.json()['activation'], expected)
-        
+
     def check_perform_immediate_activation(self, port, portId, stagedParams):
         # Request an immediate activation
         stagedUrl = URI + "/v1.0/single/"+port+"s/"+portId+"/staged"
@@ -493,7 +493,7 @@ class TestIS05(unittest.TestCase):
         activeParams = t.json()
         for i in range(0, self.get_num_paths(portId, port)):
             self.assertEqual(stagedParams[i]['destination_port'], activeParams['transport_params'][i]['destination_port'])
-        self.assertEqual(activeParams['activation']['mode'], "activate_scheduled_absolute")        
+        self.assertEqual(activeParams['activation']['mode'], "activate_scheduled_absolute")
 
     def check_activation(self, port, portId, activationMethod):
         """Checks that when an immediate activation is called staged parameters are moved
@@ -595,7 +595,7 @@ class TestIS05(unittest.TestCase):
             for i in range(0, self.get_num_paths(portInst, port)):
                 value = r.json()['transport_params'][i]['destination_port']
                 portNum = ports[portInst][i]
-                self.assertEqual(value, portNum)  
+                self.assertEqual(value, portNum)
 
     @noibc
     @bulk
@@ -639,4 +639,4 @@ if __name__ == "__main__":
         suite = unittest.TestLoader().loadTestsFromTestCase(TestIS05)
         unittest.TextTestRunner().run(suite)
     else:
-        print "Supplied URI does not appear to be valid, response code was {}".format(r.status_code)
+        print("Supplied URI does not appear to be valid, response code was {}".format(r.status_code))

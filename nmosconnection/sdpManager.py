@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import time
-from abstractDevice import StagedLockedException
-from sdpParser import SdpParser
-from cmExceptions import SdpParseError
+from .abstractDevice import StagedLockedException
+from .sdpParser import SdpParser
+from .cmExceptions import SdpParseError
 
 
 class SdpManager():

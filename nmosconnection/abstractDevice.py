@@ -17,13 +17,13 @@ import socket
 from jsonschema import validate, FormatChecker, ValidationError
 from abc import ABCMeta, abstractmethod
 import re
+import six
 
 __tp__ = 'transport_params'
 
 
+@six.add_metaclass(ABCMeta)
 class AbstractDevice:
-    __metaclass__ = ABCMeta
-
     def __init__(self, logger):
         self.staged = {}
         self.active = {}
@@ -134,7 +134,7 @@ class AbstractDevice:
         """Merge in transport parameters"""
         leg = 0
         for tp in updateObject:
-            for key, value in tp.iteritems():
+            for key, value in tp.items():
                 if key in dest[__tp__][leg]:
                     dest[__tp__][leg][key] = updateObject[leg][key]
             leg += 1

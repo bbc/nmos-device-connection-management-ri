@@ -12,13 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import json
 import unittest
 import os
 import copy
 from nmoscommon.logger import Logger
-from rtpReceiver import RtpReceiver
-from fieldException import FieldException
+from .rtpReceiver import RtpReceiver
+from .fieldException import FieldException
 from jsonschema import ValidationError
 
 SENDER_WS_PORT = 8857
@@ -101,7 +103,7 @@ class TestRtpReceiverBackend(unittest.TestCase):
             self.dut._enableFec = fec
             self.dut._enableRtcp = rtcp
             schema = self.dut.getParamsSchema(0)['items']['properties']
-            for key,value in schema.iteritems():
+            for key,value in schema.items():
                 if not fec:
                     self.assertNotEqual(key[0:2],"fec")
                 if not rtcp:
@@ -350,7 +352,7 @@ class TestRtpReceiverBackend(unittest.TestCase):
         expected["transport_params"][0]['rtcp_destination_port'] = 5005
         actual = self.dut.resolveParameters(data)
         self.assertEqual(actual, expected)
-        
+
 class testFieldException(unittest.TestCase):
 
     def test_raises(self):

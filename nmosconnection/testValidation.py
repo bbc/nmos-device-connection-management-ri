@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import unittest
-import validation
+from . import validation
 
 
 class TestValidation(unittest.TestCase):

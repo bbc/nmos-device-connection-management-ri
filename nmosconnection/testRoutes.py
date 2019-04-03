@@ -12,16 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import unittest
 import requests
 import os
 from nmoscommon.logger import Logger
 import json
-from api import ConnectionManagementAPI
+from .api import ConnectionManagementAPI
 from nmoscommon.httpserver import HttpServer
 from jsonschema import ValidationError, validate
 import uuid
-from abstractDevice import StagedLockedException
+from .abstractDevice import StagedLockedException
 
 SENDER_WS_PORT = 8857
 

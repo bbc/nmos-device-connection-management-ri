@@ -19,6 +19,8 @@
 # a web interface that allows mock senders and
 # receivers to be presented on the API.
 
+from __future__ import absolute_import
+
 import os
 import netifaces
 import json
@@ -31,13 +33,13 @@ from nmoscommon.httpserver import HttpServer
 from nmoscommon.webapi import WebAPI, file_route, route, basic_route
 from nmoscommon.utils import getLocalIP
 from flask import send_from_directory, send_file, request, abort
-from rtpSender import RtpSender
-from rtpReceiver import RtpReceiver
+from .rtpSender import RtpSender
+from .rtpReceiver import RtpReceiver
 from uuid import uuid4
-from sdpManager import SdpManager
-from sdpFactory import senderFileFactory
-from facadeWrapper import SimpleFacadeWrapper
-from api import DEVICE_ROOT, CONN_APIVERSIONS
+from .sdpManager import SdpManager
+from .sdpFactory import senderFileFactory
+from .facadeWrapper import SimpleFacadeWrapper
+from .api import DEVICE_ROOT, CONN_APIVERSIONS
 
 # Set this to change the port the API is presented on
 WS_PORT = 8858

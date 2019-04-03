@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.0.2
+- Add Python 3 support
+
 ## 2.0.1
 - Add missing monkey patch call for gevent, potentially causing freezes
 
