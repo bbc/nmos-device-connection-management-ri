@@ -28,5 +28,5 @@ class FieldException(Exception):
         if status:
             toReturn['status'] = "Error"
         if message:
-            toReturn['message'] = self.message
+            toReturn['message'] = str(self)
         return toReturn

@@ -45,7 +45,7 @@ class RtpReceiver(AbstractDevice):
 
         self.legs = legs
         self.transportManagers = []
-        self.staged[__tp__] = range(legs)
+        self.staged[__tp__] = list(range(legs))
         self.staged[__tp__][0] = {}
         if legs == 2:
             self.staged[__tp__][1] = {}

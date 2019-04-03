@@ -109,7 +109,7 @@ class TestRtpSenderBackend(unittest.TestCase):
             self.dut._enableFec = fec
             self.dut._enableRtcp = rtcp
             schema = self.dut.getParamsSchema()['items']['properties']
-            for key,value in schema.iteritems():
+            for key,value in schema.items():
                 if not fec:
                     self.assertNotEqual(key[0:2],"fec")
                 if not rtcp:
