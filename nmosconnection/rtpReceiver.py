@@ -12,13 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import os
 import json
 import copy
 import socket
 
-from abstractDevice import AbstractDevice
-from constants import SCHEMA_LOCAL
+from .abstractDevice import AbstractDevice
+from .constants import SCHEMA_LOCAL
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -43,7 +45,7 @@ class RtpReceiver(AbstractDevice):
 
         self.legs = legs
         self.transportManagers = []
-        self.staged[__tp__] = range(legs)
+        self.staged[__tp__] = list(range(legs))
         self.staged[__tp__][0] = {}
         if legs == 2:
             self.staged[__tp__][1] = {}
@@ -211,7 +213,7 @@ class RtpReceiver(AbstractDevice):
                 if key in params:
                     params.pop(key)
         # Merge in extra requirements required by constraints
-        for key, entry in params.iteritems():
+        for key, entry in params.items():
            if key in self.constraints[leg]:
                entry.update(self.constraints[leg][key])
         obj['items']['properties'] = params
@@ -220,7 +222,7 @@ class RtpReceiver(AbstractDevice):
     def getConstraints(self):
         toReturn = copy.deepcopy(self.constraints)
         for leg in range(0, self.legs):
-            for key, value in self.constraints[leg].iteritems():
+            for key, value in self.constraints[leg].items():
                 if not self._enableFec:
                     if key in self.fecParams:
                         toReturn[leg].pop(key)

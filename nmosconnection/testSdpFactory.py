@@ -14,7 +14,7 @@
 
 import unittest
 from mock import MagicMock
-from sdpFactory import senderFileFactory
+from nmosconnection.sdpFactory import senderFileFactory
 
 
 class TestSdpFactory(unittest.TestCase):

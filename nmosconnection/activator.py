@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import os
 import time
 import json
@@ -19,9 +21,9 @@ import copy
 
 from nmoscommon import timestamp as ipptimestamp
 from threading import Timer
-from fieldException import FieldException
+from .fieldException import FieldException
 from jsonschema import validate
-from constants import SCHEMA_LOCAL
+from .constants import SCHEMA_LOCAL
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))

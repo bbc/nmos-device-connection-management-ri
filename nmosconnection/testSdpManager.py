@@ -14,7 +14,7 @@
 
 import unittest
 import copy
-from sdpManager import SdpManager
+from nmosconnection.sdpManager import SdpManager
 from nmoscommon.webapi import WebAPI, basic_route
 from nmoscommon.logger import Logger
 from flask import Response

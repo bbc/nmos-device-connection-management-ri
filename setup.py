@@ -51,11 +51,12 @@ packages_required = [
     "gevent",
     "mediatimestamp",
     "requests",
-    "nmoscommon"
+    "nmoscommon",
+    "six"
 ]
 
 setup(name="connectionmanagement",
-      version="2.0.1",
+      version="2.0.2",
       description="Connection Management API implementation",
       url='https://github.com/bbc/nmos-device-connection-management-ri/',
       author='BBC R&D',

@@ -18,9 +18,9 @@ import os
 import copy
 import sys
 sys.path.append('../')
-from rtpSender import RtpSender
+from nmosconnection.rtpSender import RtpSender
 from jsonschema import validate, ValidationError
-from abstractDevice import StagedLockedException
+from nmosconnection.abstractDevice import StagedLockedException
 from nmoscommon.logger import Logger
 
 API_WS_PORT = 8856
@@ -109,7 +109,7 @@ class TestRtpSenderBackend(unittest.TestCase):
             self.dut._enableFec = fec
             self.dut._enableRtcp = rtcp
             schema = self.dut.getParamsSchema()['items']['properties']
-            for key,value in schema.iteritems():
+            for key,value in schema.items():
                 if not fec:
                     self.assertNotEqual(key[0:2],"fec")
                 if not rtcp:
@@ -281,7 +281,7 @@ class TestRtpSenderBackend(unittest.TestCase):
         expected = "10.0.1.2"
         self.callbackReturn = expected
         actual = self.dut.sourceSelector({},0)
-        
+
     def test_resolve_rtcp_dest_port(self):
         """Test automatic resolution of rtcp dest port"""
         data = [{"destination_port": 5000}]

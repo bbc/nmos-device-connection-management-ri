@@ -19,6 +19,7 @@ Starts an instance of the HTTP server and loads the API into it.
 Manages a graceful shutdown on SIGINT, SIGTERM
 """
 
+from __future__ import absolute_import
 
 import gevent
 from gevent import monkey
@@ -27,9 +28,9 @@ monkey.patch_all()
 import signal
 
 from nmoscommon.httpserver import HttpServer
-from api import ConnectionManagementAPI, CONN_APINAME, CONN_APIVERSIONS, DEVICE_ROOT
-from nmosDriver import NmosDriver
-from constants import WS_PORT
+from .api import ConnectionManagementAPI, CONN_APINAME, CONN_APIVERSIONS, DEVICE_ROOT
+from .nmosDriver import NmosDriver
+from .constants import WS_PORT
 
 
 class ConnectionManagementService:

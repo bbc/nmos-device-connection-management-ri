@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+
 import re
 from collections import namedtuple
-from cmExceptions import SdpParseError
+from .cmExceptions import SdpParseError
 
 
 ConnectionLine = namedtuple("ConnectionLine", "ntype, atype, addr, groupsize, ttl")

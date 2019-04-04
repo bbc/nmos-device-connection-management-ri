@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import unittest
-from sdpParser import SdpParser
+from nmosconnection.sdpParser import SdpParser
 from nmoscommon.logger import Logger
 
 TESTING_HTTP_PORT = 8080
