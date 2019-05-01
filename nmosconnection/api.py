@@ -16,15 +16,14 @@ from __future__ import absolute_import
 
 import os
 from nmoscommon.webapi import WebAPI, route, basic_route
-from flask import request, abort, Response, redirect
-from jsonschema import validate, FormatChecker, ValidationError, SchemaError
+from flask import request, abort, Response
+from jsonschema import validate, FormatChecker, ValidationError
 from .abstractDevice import StagedLockedException
-from .sdpManager import SdpManager
 import traceback
 import json
 from .activator import Activator
-
 from .constants import SCHEMA_LOCAL
+from nmoscommon.auth.nmos_auth import RequiresAuth
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -127,11 +126,11 @@ class ConnectionManagementAPI(WebAPI):
 
     @route('/')
     def __index(self):
-        return (200, [CONN_APINAMESPACE+"/"])
+        return (200, [CONN_APINAMESPACE + "/"])
 
-    @route('/'+CONN_APINAMESPACE+"/")
+    @route('/' + CONN_APINAMESPACE + "/")
     def __namespaceindex(self):
-        return (200, [CONN_APINAME+"/"])
+        return (200, [CONN_APINAME + "/"])
 
     @route(DEVICE_ROOT)
     def __nameindex(self):
@@ -217,6 +216,7 @@ class ConnectionManagementAPI(WebAPI):
 
     @route(DEVICE_ROOT + "<api_version>/" + SINGLE_ROOT + '<sr>/<device>/staged',
            methods=['PATCH'])
+    @RequiresAuth()
     def single_staged_patch(self, api_version, sr, device):
         if api_version not in CONN_APIVERSIONS:
             abort(404)
