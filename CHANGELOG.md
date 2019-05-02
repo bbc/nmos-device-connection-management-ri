@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.1.1
+- Fix missing files in Python 3 Debian package
+
 ## 2.1.0
 - Addition of NMOS Oauth2 Security Decorators to protect connection endpoints
 

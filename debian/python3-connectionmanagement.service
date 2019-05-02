@@ -1,0 +1,15 @@
+[Unit]
+Description=nmosconnectionmanagement
+Wants=network-online.target
+After=network.target network-online-target
+
+[Service]
+User=ipstudio
+Restart=always
+RestartSec=3
+ExecStart=/usr/bin/connectionmanagement
+
+[Install]
+WantedBy=multi-user.target
+Alias=nmos-connection.service
+Alias=ips-connectionmanagement.service
