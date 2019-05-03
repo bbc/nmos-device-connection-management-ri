@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.1.2
+- Fix potential race condition in the availability of SDP files
+
 ## 2.1.1
 - Fix missing files in Python 3 Debian package
 

@@ -72,16 +72,18 @@ class ConnectionManagementAPI(WebAPI):
                 "Receiver already registered with uuid " + uuid
             )
         self.receivers[uuid] = receiver
+        # Note the transport managers must be listed first so that they activate first
+        # This ensures that SDP files are available via the API before any interactions with the driver
         if receiver.legs == 1:
             self.activators[uuid] = Activator([
-                receiver,
-                receiver.transportManagers[0]
+                receiver.transportManagers[0],
+                receiver
             ])
         else:
             self.activators[uuid] = Activator([
-                receiver,
                 receiver.transportManagers[0],
-                receiver.transportManagers[1]
+                receiver.transportManagers[1],
+                receiver
             ])
         self.transportManagers[uuid] = receiver.transportManagers[0]
         return self.activators[uuid]
