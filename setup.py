@@ -21,9 +21,8 @@ import os
 
 def is_package(path):
     return (
-        os.path.isdir(path) and
-        os.path.isfile(os.path.join(path, '__init__.py'))
-        )
+        os.path.isdir(path) and os.path.isfile(os.path.join(path, '__init__.py'))
+    )
 
 
 def find_packages(path, base=""):
@@ -55,22 +54,21 @@ packages_required = [
     "six"
 ]
 
-setup(name="connectionmanagement",
-      version="2.1.2",
-      description="Connection Management API implementation",
-      url='https://github.com/bbc/nmos-device-connection-management-ri/',
-      author='BBC R&D',
-      author_email='peter.brightwell@bbc.co.uk',
-      license='Apache 2',
-      packages=package_names,
-      package_dir=packages,
-      install_requires=packages_required,
-      package_data={'': ['templates/*']},
-      scripts=[],
-      data_files=[
-          ('/usr/bin', ['bin/connectionmanagement'])
-      ],
-      long_description="""
-Implementation of NMOS connection management API
-"""
-      )
+setup(
+    name="connectionmanagement",
+    version="2.1.3",
+    description="Connection Management API implementation",
+    url='https://github.com/bbc/nmos-device-connection-management-ri/',
+    author='BBC R&D',
+    author_email='peter.brightwell@bbc.co.uk',
+    license='Apache 2',
+    packages=package_names,
+    package_dir=packages,
+    install_requires=packages_required,
+    package_data={'': ['templates/*']},
+    scripts=[],
+    data_files=[
+        ('/usr/bin', ['bin/connectionmanagement'])
+    ],
+    long_description="Implementation of NMOS connection management API"
+)
