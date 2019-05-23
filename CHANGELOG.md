@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.1.4
+- Switch to using facade class from nmosnode
+
 ## 2.1.3
 - Fix Linting, change tests file structure, add Python 2/3 linting stages to CI
 

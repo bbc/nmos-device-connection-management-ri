@@ -38,7 +38,7 @@ class ConnectionManagementService:
     def __init__(self, logger=None):
         self.running = False
         from nmoscommon.logger import Logger
-        from nmoscommon.facade import Facade
+        from nmosnode.facade import Facade
         self.logger = Logger("conmanage")
         self.logger.writeWarning("Could not find ipppython facade")
         self.facade = Facade("{}/{}".format(CONN_APINAME, CONN_APIVERSIONS[-1]),
