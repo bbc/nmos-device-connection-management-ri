@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.1.5
+- Move NMOS packages from recommends to depends
+
 ## 2.1.4
 - Switch to using facade class from nmosnode
 
