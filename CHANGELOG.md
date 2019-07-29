@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.2.0
+- Add mechanism to access Sender's receiver_id from driver
+
 ## 2.1.5
 - Move NMOS packages from recommends to depends
 
