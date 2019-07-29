@@ -270,6 +270,9 @@ class RtpSender(AbstractDevice):
     def getActiveTransportFileURL(self):
         return self.transportFile
 
+    def getActiveReceiverID(self):
+        return self.active['receiver_id']
+
     def getTransportType(self):
         return "rtp"
 
