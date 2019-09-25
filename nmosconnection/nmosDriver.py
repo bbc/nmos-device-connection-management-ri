@@ -104,7 +104,7 @@ class NmosDriverWebApi(WebAPI):
     @route('/api/senders/', methods=['GET', 'POST'])
     def _api_senders(self):
         if request.method == 'GET':
-            return self.manager.senders.keys()
+            return list(self.manager.senders.keys())
         elif request.method == 'POST':
             try:
                 data = request.get_json()
@@ -131,7 +131,7 @@ class NmosDriverWebApi(WebAPI):
     @route('/api/receivers/', methods=['GET', 'POST'])
     def _api_receivers(self):
         if request.method == 'GET':
-            return self.manager.receivers.keys()
+            return list(self.manager.receivers.keys())
         elif request.method == 'POST':
             try:
                 data = request.get_json()
