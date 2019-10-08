@@ -212,6 +212,13 @@ class ConnectionManagementAPI(WebAPI):
         transceiver = self.validateAPIVersion(api_version, transceiverType, transceiverId)
         return transceiver.getConstraints()
 
+    @route(CONN_ROOT + "<api_version>/" + SINGLE_ROOT + '<transceiverType>/<transceiverId>/staged',
+           methods=['PATCH'])
+    @RequiresAuth()
+    def single_staged_patch(self, api_version, transceiverType, transceiverId):
+        req = request.get_json()
+        return self.staged_patch(api_version, transceiverType, transceiverId, req)
+
     @route(CONN_ROOT + "<api_version>/" + SINGLE_ROOT + '<transceiverType>/<transceiverId>/staged/',
            methods=['GET'])
     def __staged_get(self, api_version, transceiverType, transceiverId):
@@ -222,13 +229,6 @@ class ConnectionManagementAPI(WebAPI):
             transportManager = self.getTransportManager(transceiverId)
             toReturn['transport_file'] = transportManager.getStagedRequest()
         return toReturn
-
-    @route(CONN_ROOT + "<api_version>/" + SINGLE_ROOT + '<transceiverType>/<transceiverId>/staged',
-           methods=['PATCH'])
-    @RequiresAuth()
-    def single_staged_patch(self, api_version, transceiverType, transceiverId):
-        req = request.get_json()
-        return self.staged_patch(api_version, transceiverType, transceiverId, req)
 
     def staged_patch(self, api_version, transceiverType, transceiverId, params):
         toReturn = {}
