@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.2.3
+- Fix ordering issue causing OPTIONS fails with Python 3
+
 ## 2.2.2
 - Fix non-JSON response from GETs to NMOS demo driver
 
