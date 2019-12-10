@@ -368,20 +368,17 @@ class ConnectionManagementAPI(WebAPI):
         resp.headers['content-type'] = 'application/sdp'
         return resp
 
-    @route(
-        CONN_ROOT + "<api_version>/" + SINGLE_ROOT + '<transceiverType>/<transceiverId>/transporttype/', methods=['GET']
-    )
+    @basic_route(CONN_ROOT + "<api_version>/" + SINGLE_ROOT + '<transceiverType>/<transceiverId>/transporttype/')
     def __transportType(self, api_version, transceiverType, transceiverId):
         if api_version == "v1.0":
             # This resource doesn't exist before v1.1
             abort(404)
         transceiver = self.validateAPIVersion(api_version, transceiverType, transceiverId)
-        toReturn = {}
-        toReturn = json.dumps(TRANSPORT_URN + transceiver.getTransportType())
-        return toReturn
+        resp = Response(json.dumps(TRANSPORT_URN + transceiver.getTransportType()))
+        resp.headers['content-type'] = 'application/json'
+        return resp
 
     """Begin bulk API routes"""
-
     @route(CONN_ROOT + "<api_version>/" + BULK_ROOT)
     def __bulk_root(self, api_version):
         self.validateAPIVersion(api_version)
