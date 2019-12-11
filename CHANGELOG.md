@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.2.5
+- Fix Content-Type exposed by transporttype resource
+
 ## 2.2.4
 - Alter executable to run using Python3, alter `stdeb` to replace python 2 package
 
