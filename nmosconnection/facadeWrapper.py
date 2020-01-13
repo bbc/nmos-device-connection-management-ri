@@ -164,7 +164,7 @@ IS-04/05 reference implementation.",
             "height": 1080,
             "bit_depth": 10
         }, {
-            "name": "Cb",
+            "name": "Cr",
             "width": 960,
             "height": 1080,
             "bit_depth": 10

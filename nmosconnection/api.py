@@ -237,7 +237,7 @@ class ConnectionManagementAPI(WebAPI):
             self.validateAgainstSchema(params, 'v1.0-{}-stage-schema.json'.format(transceiverType[:-1]))
         except ValidationError as e:
             return (400, self.errorResponse(400, str(e)))
-        # If reciever check if transport file must be applied
+        # If receiver check if transport file must be applied
         if 'transport_file' in params and transceiverType == "receivers":
             ret = self.applyTransportFile(params.pop('transport_file'), transceiverId)
             if ret[0] != 200:
