@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.2.7
+- Fix version pinning of werkzeug
+
 ## 2.2.6
 - Fix double Cb component in Flow mock data
 

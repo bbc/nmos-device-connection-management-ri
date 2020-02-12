@@ -52,12 +52,13 @@ packages_required = [
     "requests",
     "nmoscommon",
     "six",
-    "nodefacade>=0.10.1"
+    "nodefacade>=0.10.1",
+    "werkzeug>=0.14.1,<1.0.0"  # Echo pin from nmos-common to avoid Flask overriding it
 ]
 
 setup(
     name="connectionmanagement",
-    version="2.2.6",
+    version="2.2.7",
     description="Connection Management API implementation",
     url='https://github.com/bbc/nmos-device-connection-management-ri/',
     author='BBC R&D',
