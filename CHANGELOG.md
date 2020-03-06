@@ -1,5 +1,8 @@
 # NMOS Connection Management API Implementation Changelog
 
+## 2.2.8
+- Pin version of mediatimestamp
+
 ## 2.2.7
 - Fix version pinning of werkzeug
 

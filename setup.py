@@ -48,7 +48,7 @@ packages_required = [
     "flask",
     "jsonschema",
     "gevent",
-    "mediatimestamp",
+    "mediatimestamp<2.0.0",
     "requests",
     "nmoscommon",
     "six",
@@ -58,7 +58,7 @@ packages_required = [
 
 setup(
     name="connectionmanagement",
-    version="2.2.7",
+    version="2.2.8",
     description="Connection Management API implementation",
     url='https://github.com/bbc/nmos-device-connection-management-ri/',
     author='BBC R&D',
