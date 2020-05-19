@@ -50,8 +50,8 @@ class ConnectionManagementService:
     def start(self):
         '''Call this to run the API without blocking'''
         if self.running:
-            gevent.signal(signal.SIGINT, self.sig_handler)
-            gevent.signal(signal.SIGTERM, self.sig_handler)
+            gevent.signal_handler(signal.SIGINT, self.sig_handler)
+            gevent.signal_handler(signal.SIGTERM, self.sig_handler)
 
         self.running = True
 
